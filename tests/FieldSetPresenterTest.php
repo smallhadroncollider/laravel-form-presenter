@@ -3,6 +3,7 @@
 use SmallHadronCollider\LaravelFormPresenter\FormPresenter;
 use SmallHadronCollider\LaravelFormPresenter\FieldPresenter;
 use SmallHadronCollider\LaravelFormPresenter\FieldSetPresenter;
+use SmallHadronCollider\LaravelFormPresenter\ModelPresenterInterface;
 
 class FieldSetPresenterTest extends TestCase
 {
@@ -44,6 +45,16 @@ class FieldSetPresenterTest extends TestCase
 
         $this->assertInstanceOf(FormPresenter::class, $form);
         $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->display());
+    }
+
+    public function testSetModel()
+    {
+        $this->app->bind(ModelPresenterInterface::class, TestModelPresenter::class);
+
+        $fieldset = new TestFieldSetPresenter();
+        $fieldset->setModel(new TestModel());
+
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text" value="Test">', $fieldset->render());
     }
 }
 
@@ -92,5 +103,20 @@ class TestViewFieldSetPresenter extends FieldSetPresenter
     protected function wrap($content)
     {
         return '<fieldset class="form-group">'. $content . '</fieldset>';
+    }
+}
+
+class TestModel
+{
+    public $attrs = [
+        "name" => "Test",
+    ];
+}
+
+class TestModelPresenter implements ModelPresenterInterface
+{
+    public function present($model)
+    {
+        return $model->attrs;
     }
 }

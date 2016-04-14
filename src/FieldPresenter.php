@@ -70,6 +70,17 @@ class FieldPresenter implements Renderable
         return $this->attr["name"];
     }
 
+    public function setData(array $data)
+    {
+        $name = $this->attr["name"];
+
+        if (array_key_exists($name, $data)) {
+            $this->field->setValue($data[$name]);
+        }
+
+        return $this;
+    }
+
     private function getPresenterResolver()
     {
         if (self::$presenterResolver) {

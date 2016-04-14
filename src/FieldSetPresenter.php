@@ -6,15 +6,30 @@ abstract class FieldSetPresenter implements Renderable
 {
     protected $exclude = [];
     protected $only = [];
+    protected $model = [];
 
     public function form()
     {
         return new FormPresenter($this);
     }
 
+    public function setModel($model)
+    {
+        $presenter = app()->make(ModelPresenterInterface::class);
+        $this->model = $presenter->present($model);
+        return $this;
+    }
+
+    public function setData(array $data)
+    {
+        $this->model = $data;
+        return $this;
+    }
+
     public function render()
     {
         $content = array_reduce($this->fields(), function ($html, Renderable $field) {
+            $field->setData($this->model);
             return $this->shouldRenderField($field) ? $html . $field->render() : $html;
         }, "");
 
