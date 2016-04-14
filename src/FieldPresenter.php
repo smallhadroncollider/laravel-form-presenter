@@ -60,6 +60,11 @@ class FieldPresenter implements Renderable
         ]);
     }
 
+    public function hasFiles()
+    {
+        return $this->attr["type"] == "file";
+    }
+
     public function __toString()
     {
         return $this->render();
@@ -68,6 +73,17 @@ class FieldPresenter implements Renderable
     public function id()
     {
         return $this->attr["name"];
+    }
+
+    public function setData(array $data)
+    {
+        $name = $this->attr["name"];
+
+        if (array_key_exists($name, $data)) {
+            $this->field->setValue($data[$name]);
+        }
+
+        return $this;
     }
 
     private function getPresenterResolver()

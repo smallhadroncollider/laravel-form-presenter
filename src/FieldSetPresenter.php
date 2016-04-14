@@ -6,19 +6,48 @@ abstract class FieldSetPresenter implements Renderable
 {
     protected $exclude = [];
     protected $only = [];
+    protected $model = [];
+    protected $fields;
 
     public function form()
     {
         return new FormPresenter($this);
     }
 
+    /**
+     * Turns model into an array structure and then stores it
+     */
+    public function setModel($model)
+    {
+        $presenter = app()->make(ModelPresenterInterface::class);
+        $this->model = $presenter->present($model);
+        return $this;
+    }
+
+    /**
+     * If model is already in array form (i.e. when fieldset is nested)
+     */
+    public function setData(array $data)
+    {
+        $this->model = $data;
+        return $this;
+    }
+
     public function render()
     {
-        $content = array_reduce($this->fields(), function ($html, Renderable $field) {
+        $content = array_reduce($this->getFields(), function ($html, Renderable $field) {
+            $field->setData($this->model);
             return $this->shouldRenderField($field) ? $html . $field->render() : $html;
         }, "");
 
         return $this->wrap($content);
+    }
+
+    public function hasFiles()
+    {
+        return !!count(array_filter($this->getFields(), function ($field) {
+            return $field->hasFiles();
+        }));
     }
 
     public function __toString()
@@ -28,7 +57,7 @@ abstract class FieldSetPresenter implements Renderable
 
     public function id()
     {
-        return "";
+        return implode(",", array_keys($this->getFields()));
     }
 
     public function field(array $attrs)
@@ -52,7 +81,21 @@ abstract class FieldSetPresenter implements Renderable
     {
         return array_map(function ($field) {
             return $field->id();
-        }, $this->fields());
+        }, $this->getFields());
+    }
+
+    protected function getFields()
+    {
+        if (!$this->fields) {
+            $this->fields = $this->fields();
+        }
+
+        return $this->fields;
+    }
+
+    protected function model($attr)
+    {
+        return array_key_exists($attr, $this->model) ? $this->model[$attr] : null;
     }
 
     protected function shouldRenderField(Renderable $field)

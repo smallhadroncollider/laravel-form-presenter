@@ -6,12 +6,18 @@ use Collective\Html\FormBuilder;
 
 class Field
 {
-    protected $attr;
+    protected $attr = [];
 
     public function __construct(array $attr)
     {
         $this->formBuilder = app()->make(FormBuilder::class);
         $this->attr = $attr;
+    }
+
+    public function setValue($value)
+    {
+        $this->attr["value"] = $value;
+        return $this;
     }
 
     public function label($attrs = [])

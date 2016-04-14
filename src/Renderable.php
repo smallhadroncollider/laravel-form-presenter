@@ -6,4 +6,6 @@ interface Renderable
 {
     public function render();
     public function id();
+    public function setData(array $data);
+    public function hasFiles();
 }

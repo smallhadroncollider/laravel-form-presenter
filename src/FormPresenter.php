@@ -8,7 +8,7 @@ use Collective\Html\FormBuilder;
 class FormPresenter
 {
     private $fieldset;
-    private $attr;
+    private $attr = [];
 
     public function __construct(FieldSetPresenter $fieldset)
     {
@@ -16,14 +16,14 @@ class FormPresenter
         $this->formBuilder = app()->make(FormBuilder::class);
     }
 
-    public function render()
+    public function display()
     {
         return $this->fieldset->render();
     }
 
     public function __toString()
     {
-        return $this->render();
+        return $this->display();
     }
 
     public function exclude(array $exclude)
@@ -46,20 +46,16 @@ class FormPresenter
 
     public function open(array $attr = [])
     {
+        if ($this->fieldset->hasFiles()) {
+            $this->attr["files"] = true;
+        }
+
         return $this->formBuilder->open(array_merge($this->attr, $attr));
     }
 
-    public function response(array $response)
+    public function fieldNames()
     {
-        $fields = $this->fieldset->fieldNames();
-
-        foreach ($response as $key => $value) {
-            if (!in_array($key, $fields)) {
-                unset($response[$key]);
-            }
-        }
-
-        return $response;
+        return $this->fieldset->fieldNames();
     }
 
     public function __call($name, $arguments)

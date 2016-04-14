@@ -3,6 +3,7 @@
 use SmallHadronCollider\LaravelFormPresenter\FormPresenter;
 use SmallHadronCollider\LaravelFormPresenter\FieldPresenter;
 use SmallHadronCollider\LaravelFormPresenter\FieldSetPresenter;
+use SmallHadronCollider\LaravelFormPresenter\ModelPresenterInterface;
 
 class FieldSetPresenterTest extends TestCase
 {
@@ -43,7 +44,32 @@ class FieldSetPresenterTest extends TestCase
         $form = (new TestFieldSetPresenter())->form();
 
         $this->assertInstanceOf(FormPresenter::class, $form);
-        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->render());
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->display());
+    }
+
+    public function testSetModel()
+    {
+        $this->app->bind(ModelPresenterInterface::class, TestModelPresenter::class);
+
+        $fieldset = new TestFieldSetPresenter();
+        $fieldset->setModel(new TestModel());
+
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text" value="Test">', $fieldset->render());
+    }
+
+    public function testDynamicField()
+    {
+        $this->app->bind(ModelPresenterInterface::class, TestModelPresenter::class);
+
+        // Field shouldn't render as it's determined by model
+        $fieldset = new TestModelFieldSetPresenter();
+        $this->assertEquals('', $fieldset->render());
+
+        // Field should render
+        $fieldset = new TestModelFieldSetPresenter();
+        $fieldset->setModel(new TestModel());
+
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text" value="Test">', $fieldset->render());
     }
 }
 
@@ -92,5 +118,38 @@ class TestViewFieldSetPresenter extends FieldSetPresenter
     protected function wrap($content)
     {
         return '<fieldset class="form-group">'. $content . '</fieldset>';
+    }
+}
+
+class TestModelFieldSetPresenter extends FieldSetPresenter
+{
+    protected function fields()
+    {
+        if ($this->model("name")) {
+            return [
+                $this->field([
+                    "type" => "text",
+                    "name" => "name",
+                    "label" => "Name",
+                ]),
+            ];
+        }
+
+        return [];
+    }
+}
+
+class TestModel
+{
+    public $attrs = [
+        "name" => "Test",
+    ];
+}
+
+class TestModelPresenter implements ModelPresenterInterface
+{
+    public function present($model)
+    {
+        return $model->attrs;
     }
 }

@@ -11,6 +11,11 @@ use Illuminate\Contracts\Routing\UrlGenerator;
 
 class FormPresenterServiceProvider extends ServiceProvider
 {
+    public function boot()
+    {
+        view()->addNamespace("smallhadroncollider/laravel-form-presenter", __DIR__ . "/../templates");
+    }
+
     public function register()
     {
         $this->app->singleton(FormBuilder::class, function ($app) {
