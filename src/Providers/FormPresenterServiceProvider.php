@@ -2,6 +2,7 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter\Providers;
 
+use View;
 use Illuminate\Support\ServiceProvider;
 
 use Collective\Html\FormBuilder;
@@ -11,6 +12,11 @@ use Illuminate\Contracts\Routing\UrlGenerator;
 
 class FormPresenterServiceProvider extends ServiceProvider
 {
+    public function boot()
+    {
+        View::addNamespace("smallhadroncollider/laravel-form-presenter", __DIR__ . "/../templates");
+    }
+
     public function register()
     {
         $this->app->singleton(FormBuilder::class, function ($app) {
