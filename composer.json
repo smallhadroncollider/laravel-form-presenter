@@ -1,0 +1,18 @@
+{
+    "name": "smallhadroncollider/laravel-form-presenter",
+    "description": "Laravel Form Presenter",
+    "keywords": ["forms", "laravel", "presenter"],
+    "license": "MIT",
+    "type": "library",
+    "require": {
+        "laravelcollective/html": "^5.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SmallHadronCollider\\LaravelFormPresenter\\": "src/"
+        }
+    }
+}
