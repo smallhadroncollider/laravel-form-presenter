@@ -93,6 +93,11 @@ abstract class FieldSetPresenter implements Renderable
         return $this->fields;
     }
 
+    protected function model($attr)
+    {
+        return array_key_exists($attr, $this->model) ? $this->model[$attr] : null;
+    }
+
     protected function shouldRenderField(Renderable $field)
     {
         $excluded = in_array($field->id(), $this->exclude);

@@ -56,6 +56,21 @@ class FieldSetPresenterTest extends TestCase
 
         $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text" value="Test">', $fieldset->render());
     }
+
+    public function testDynamicField()
+    {
+        $this->app->bind(ModelPresenterInterface::class, TestModelPresenter::class);
+
+        // Field shouldn't render as it's determined by model
+        $fieldset = new TestModelFieldSetPresenter();
+        $this->assertEquals('', $fieldset->render());
+
+        // Field should render
+        $fieldset = new TestModelFieldSetPresenter();
+        $fieldset->setModel(new TestModel());
+
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text" value="Test">', $fieldset->render());
+    }
 }
 
 class TestFieldSetPresenter extends FieldSetPresenter
@@ -103,6 +118,24 @@ class TestViewFieldSetPresenter extends FieldSetPresenter
     protected function wrap($content)
     {
         return '<fieldset class="form-group">'. $content . '</fieldset>';
+    }
+}
+
+class TestModelFieldSetPresenter extends FieldSetPresenter
+{
+    protected function fields()
+    {
+        if ($this->model("name")) {
+            return [
+                $this->field([
+                    "type" => "text",
+                    "name" => "name",
+                    "label" => "Name",
+                ]),
+            ];
+        }
+
+        return [];
     }
 }
 
