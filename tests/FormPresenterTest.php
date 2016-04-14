@@ -50,17 +50,10 @@ class FormPresenterTest extends TestCase
         $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->render());
     }
 
-    public function testResponse()
+    public function testFieldNames()
     {
         $form = new FormPresenter(new TestFieldSet);
-
-        $response = $form->response([
-            "name" => "Test",
-            "email" => "test@test.com",
-            "ignore" => "ignore",
-        ]);
-
-        $this->assertEquals(["name" => "Test", "email" => "test@test.com"], $response);
+        $this->assertEquals(["name", "email"], $form->fieldNames());
     }
 
     public function testPassthrough()

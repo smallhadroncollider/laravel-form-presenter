@@ -49,17 +49,9 @@ class FormPresenter
         return $this->formBuilder->open(array_merge($this->attr, $attr));
     }
 
-    public function response(array $response)
+    public function fieldNames()
     {
-        $fields = $this->fieldset->fieldNames();
-
-        foreach ($response as $key => $value) {
-            if (!in_array($key, $fields)) {
-                unset($response[$key]);
-            }
-        }
-
-        return $response;
+        return $this->fieldset->fieldNames();
     }
 
     public function __call($name, $arguments)
