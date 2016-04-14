@@ -7,6 +7,7 @@ abstract class FieldSetPresenter implements Renderable
     protected $exclude = [];
     protected $only = [];
     protected $model = [];
+    protected $fields;
 
     public function form()
     {
@@ -28,12 +29,19 @@ abstract class FieldSetPresenter implements Renderable
 
     public function render()
     {
-        $content = array_reduce($this->fields(), function ($html, Renderable $field) {
+        $content = array_reduce($this->getFields(), function ($html, Renderable $field) {
             $field->setData($this->model);
             return $this->shouldRenderField($field) ? $html . $field->render() : $html;
         }, "");
 
         return $this->wrap($content);
+    }
+
+    public function hasFiles()
+    {
+        return !!count(array_filter($this->getFields(), function ($field) {
+            return $field->hasFiles();
+        }));
     }
 
     public function __toString()
@@ -67,7 +75,16 @@ abstract class FieldSetPresenter implements Renderable
     {
         return array_map(function ($field) {
             return $field->id();
-        }, $this->fields());
+        }, $this->getFields());
+    }
+
+    protected function getFields()
+    {
+        if (!$this->fields) {
+            $this->fields = $this->fields();
+        }
+
+        return $this->fields;
     }
 
     protected function shouldRenderField(Renderable $field)

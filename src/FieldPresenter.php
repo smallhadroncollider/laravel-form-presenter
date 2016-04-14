@@ -60,6 +60,11 @@ class FieldPresenter implements Renderable
         ]);
     }
 
+    public function hasFiles()
+    {
+        return $this->attr["type"] == "file";
+    }
+
     public function __toString()
     {
         return $this->render();

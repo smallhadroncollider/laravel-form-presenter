@@ -46,6 +46,10 @@ class FormPresenter
 
     public function open(array $attr = [])
     {
+        if ($this->fieldset->hasFiles()) {
+            $this->attr["files"] = true;
+        }
+
         return $this->formBuilder->open(array_merge($this->attr, $attr));
     }
 
