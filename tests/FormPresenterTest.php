@@ -14,13 +14,13 @@ class FormPresenterTest extends TestCase
         FieldPresenter::presenter(null);
     }
 
-    public function testRender()
+    public function testDisplay()
     {
         $form = new FormPresenter(new TestFieldSet);
 
         $this->assertEquals(
             '<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text"><label for="email">Email</label><input id="email" placeholder="Email" name="email" type="email">',
-            $form->render()
+            $form->display()
         );
     }
 
@@ -39,7 +39,7 @@ class FormPresenterTest extends TestCase
         $form = new FormPresenter(new TestFieldSet);
         $form->exclude(["email"]);
 
-        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->render());
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->display());
     }
 
     public function testOnly()
@@ -47,7 +47,7 @@ class FormPresenterTest extends TestCase
         $form = new FormPresenter(new TestFieldSet);
         $form->only(["name"]);
 
-        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->render());
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->display());
     }
 
     public function testFieldNames()

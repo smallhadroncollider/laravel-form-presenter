@@ -16,14 +16,14 @@ class FormPresenter
         $this->formBuilder = app()->make(FormBuilder::class);
     }
 
-    public function render()
+    public function display()
     {
         return $this->fieldset->render();
     }
 
     public function __toString()
     {
-        return $this->render();
+        return $this->display();
     }
 
     public function exclude(array $exclude)

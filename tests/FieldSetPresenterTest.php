@@ -43,7 +43,7 @@ class FieldSetPresenterTest extends TestCase
         $form = (new TestFieldSetPresenter())->form();
 
         $this->assertInstanceOf(FormPresenter::class, $form);
-        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->render());
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->display());
     }
 }
 
