@@ -14,6 +14,9 @@ abstract class FieldSetPresenter implements Renderable
         return new FormPresenter($this);
     }
 
+    /**
+     * Turns model into an array structure and then stores it
+     */
     public function setModel($model)
     {
         $presenter = app()->make(ModelPresenterInterface::class);
@@ -21,6 +24,9 @@ abstract class FieldSetPresenter implements Renderable
         return $this;
     }
 
+    /**
+     * If model is already in array form (i.e. when fieldset is nested)
+     */
     public function setData(array $data)
     {
         $this->model = $data;
