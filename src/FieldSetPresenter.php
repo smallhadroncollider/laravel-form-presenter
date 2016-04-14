@@ -51,7 +51,7 @@ abstract class FieldSetPresenter implements Renderable
 
     public function id()
     {
-        return "";
+        return implode(",", array_keys($this->getFields()));
     }
 
     public function field(array $attrs)
