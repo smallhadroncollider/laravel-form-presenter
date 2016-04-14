@@ -8,7 +8,7 @@ use Collective\Html\FormBuilder;
 class FormPresenter
 {
     private $fieldset;
-    private $attr;
+    private $attr = [];
 
     public function __construct(FieldSetPresenter $fieldset)
     {
