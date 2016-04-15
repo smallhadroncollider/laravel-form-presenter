@@ -29,6 +29,7 @@ class FieldPresenter implements Renderable
 
     private $types = [
         "text" => Fields\Field::class,
+        "boolean" => Fields\Boolean::class,
         "email" => Fields\Field::class,
         "number" => Fields\Field::class,
         "password" => Fields\Field::class,
@@ -73,6 +74,12 @@ class FieldPresenter implements Renderable
     public function id()
     {
         return $this->attr["name"];
+    }
+
+    public function fieldNames(array $fieldNames = [])
+    {
+        $fieldNames[] = $this->id();
+        return $fieldNames;
     }
 
     public function setData(array $data)

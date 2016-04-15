@@ -47,6 +47,18 @@ class FieldSetPresenterTest extends TestCase
         $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->display());
     }
 
+    public function testFieldNames()
+    {
+        $fieldset = new TestNestedFieldSetPresenter();
+        $this->assertEquals(["email", "name"], $fieldset->fieldNames());
+    }
+
+    public function testFieldNamesExcluding()
+    {
+        $fieldset = new TestNestedFieldSetPresenter();
+        $this->assertEquals(["name"], $fieldset->fieldNamesExcluding(["email"]));
+    }
+
     public function testSetModel()
     {
         $this->app->bind(ModelPresenterInterface::class, TestModelPresenter::class);

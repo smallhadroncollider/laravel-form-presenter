@@ -116,6 +116,23 @@ class FieldPresenterTest extends TestCase
         $this->assertEquals('<label for="name">Name</label> <input id="name" placeholder="Name" name="name" type="text">', $field);
     }
 
+    public function testBoolean()
+    {
+        FieldPresenter::presenter($this->presenter);
+
+        $field = new FieldPresenter([
+            "name" => "testing",
+            "label" => "Testing",
+            "type" => "boolean",
+        ]);
+
+        $this->assertEquals('<label for="testing">Testing</label> <input id="testing_yes" checked="checked" name="testing" type="radio" value="1"> <label for="testing_yes">Yes</label> <input id="testing_no" name="testing" type="radio" value="0"> <label for="testing_no">No</label>', $field->render());
+
+        $field->setData(["testing" => false]);
+
+        $this->assertEquals('<label for="testing">Testing</label> <input id="testing_yes" name="testing" type="radio" value="1"> <label for="testing_yes">Yes</label> <input id="testing_no" checked="checked" name="testing" type="radio" value="0"> <label for="testing_no">No</label>', $field->render());
+    }
+
     public function testAttributes()
     {
         FieldPresenter::presenter(function ($attrs) {
