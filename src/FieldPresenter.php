@@ -75,6 +75,12 @@ class FieldPresenter implements Renderable
         return $this->attr["name"];
     }
 
+    public function fieldNames(array $fieldNames = [])
+    {
+        $fieldNames[] = $this->id();
+        return $fieldNames;
+    }
+
     public function setData(array $data)
     {
         $name = $this->attr["name"];

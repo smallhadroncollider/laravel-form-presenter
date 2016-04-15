@@ -57,7 +57,7 @@ abstract class FieldSetPresenter implements Renderable
 
     public function id()
     {
-        return implode(",", array_keys($this->getFields()));
+        return implode(",", $this->fieldNames());
     }
 
     public function field(array $attrs)
@@ -77,11 +77,18 @@ abstract class FieldSetPresenter implements Renderable
         return $this;
     }
 
-    public function fieldNames()
+    public function fieldNames(array $fieldNames = [])
     {
-        return array_map(function ($field) {
-            return $field->id();
-        }, $this->getFields());
+        return array_reduce($this->getFields(), function ($fieldNames, $field) {
+            return $field->fieldNames($fieldNames);
+        }, $fieldNames);
+    }
+
+    public function fieldNamesExcluding(array $excluding)
+    {
+        return array_values(array_filter($this->fieldNames(), function ($fieldName) use ($excluding) {
+            return !in_array($fieldName, $excluding);
+        }));
     }
 
     protected function getFields()
