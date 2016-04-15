@@ -7,16 +7,18 @@ use Collective\Html\FormBuilder;
 class Field
 {
     protected $attr = [];
+    protected $value = null;
 
     public function __construct(array $attr)
     {
         $this->formBuilder = app()->make(FormBuilder::class);
         $this->attr = $attr;
+        $this->value = $this->attr("value");
     }
 
     public function setValue($value)
     {
-        $this->attr["value"] = $value;
+        $this->value = $value;
         return $this;
     }
 
@@ -47,6 +49,6 @@ class Field
 
     protected function value()
     {
-        return old($this->attr("name"), $this->attr("value", null));
+        return old($this->attr("name"), $this->value);
     }
 }

@@ -61,6 +61,20 @@ class FieldPresenterTest extends TestCase
           ], '<label for="file">File</label> <input name="file" type="file" id="file">'],
 
           [[
+              "type" => "checkbox",
+              "name" => "check",
+              "label" => "Check",
+              "value" => "1"
+          ], '<label for="check">Check</label> <input checked="checked" name="check" type="checkbox" value="1" id="check">'],
+
+          [[
+              "type" => "radio",
+              "name" => "radio",
+              "label" => "Radio",
+              "value" => "1"
+          ], '<label for="radio">Radio</label> <input checked="checked" name="radio" type="radio" value="1" id="radio">'],
+
+          [[
               "type" => "hidden",
               "name" => "hidden",
               "label" => "Hidden",
@@ -114,6 +128,24 @@ class FieldPresenterTest extends TestCase
         ]);
 
         $this->assertEquals('<label for="name">Name</label> <input id="name" placeholder="Name" name="name" type="text">', $field);
+    }
+
+    public function testCheckboxChecked()
+    {
+        FieldPresenter::presenter($this->presenter);
+
+        $field = new FieldPresenter([
+            "type" => "checkbox",
+            "name" => "check",
+            "label" => "Check",
+            "value" => "1",
+        ]);
+
+        $field->setData(["check" => 0]);
+        $this->assertEquals('<label for="check">Check</label> <input name="check" type="checkbox" value="1" id="check">', $field->render());
+
+        $field->setData(["check" => 1]);
+        $this->assertEquals('<label for="check">Check</label> <input checked="checked" name="check" type="checkbox" value="1" id="check">', $field->render());
     }
 
     public function testBoolean()

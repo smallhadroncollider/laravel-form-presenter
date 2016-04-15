@@ -30,6 +30,8 @@ class FieldPresenter implements Renderable
     private $types = [
         "text" => Fields\Field::class,
         "boolean" => Fields\Boolean::class,
+        "checkbox" => Fields\Checked::class,
+        "radio" => Fields\Checked::class,
         "email" => Fields\Field::class,
         "number" => Fields\Field::class,
         "password" => Fields\Field::class,
