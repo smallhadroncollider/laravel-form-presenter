@@ -5,5 +5,7 @@
         <span class="form__info">{{ $errors->first($name) }}</span>
     @endif
 
-    {!! $field->display(["class" => "form__control form__control--grouped form__control--{$type}"]) !!}
+    <div>
+        {!! $field->display(["class" => "form__control form__control--grouped form__control--{$type}"]) !!}
+    </div>
 </div>
