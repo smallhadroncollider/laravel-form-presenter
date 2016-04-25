@@ -1,11 +1,9 @@
-<div class="form__group {{ $errors->has($name) ? "form__group--error" : "" }}">
-    {!! $field->label() !!}
+<div class="form-group {{ $errors->has($name) ? "has-error" : "" }}">
+    {!! $field->label(["class" => "control-label"]) !!}
 
     @if ($errors->has($name))
-        <span class="form__info">{{ $errors->first($name) }}</span>
+        <span class="help-block">{{ $errors->first($name) }}</span>
     @endif
 
-    <div>
-        {!! $field->display(["class" => "form__control form__control--grouped form__control--{$type}"]) !!}
-    </div>
+    {!! $field->display(["class" => "form-control"]) !!}
 </div>
