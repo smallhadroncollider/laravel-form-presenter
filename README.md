@@ -109,9 +109,23 @@ class Boolean extends Field implements FieldInterface
 {
     public function display($attrs = [])
     {
-        $yes = $this->value() || $this->value() === null;
-
-        return $this->formBuilder->radio($this->attr("name"), 1, $yes, array_merge($attrs, ["id" => $this->attr("name") . "_yes"])) . " " . $this->formBuilder->label($this->attr("name") . "_yes", "Yes") . " " . $this->formBuilder->radio($this->attr("name"), 0, !$yes, array_merge($attrs, ["id" => $this->attr("name") . "_no"])) . " " . $this->formBuilder->label($this->attr("name") . "_no", "No");
+        return view("forms/boolean", [
+            "name" => $this->attr("name"),
+            "value" => $this->value() || $this->value() === null,
+        ]);
     }
 }
+```
+
+```php
+{{-- forms/boolean.blade.php --}}
+
+<div>
+    <label>
+      <input type="radio" value="1" name="{{ $name }}"{{ $value ? " checked" : "" }}> Yes
+    </label>
+    <label>
+      <input type="radio" value="0" name="{{ $name }}"{{ $value ? "" : " checked" }}> No
+    </label>
+</div>
 ```
