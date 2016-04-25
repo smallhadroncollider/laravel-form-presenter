@@ -4,7 +4,7 @@ namespace SmallHadronCollider\LaravelFormPresenter\Fields;
 
 use Collective\Html\FormBuilder;
 
-class Checked extends Field
+class Checked extends Field implements FieldInterface
 {
     public function display($attrs = [])
     {

@@ -94,3 +94,24 @@ class PersonController extends Controller
     {!! $form->submit("Submit", ["class" => "button button--blue"]) !!}
 {!! $form->close() !!}
 ```
+
+### Adding A Custom Field Type
+
+```php
+<?php
+
+namespace App\Http\Presenters\Forms\Fields;
+
+use SmallHadronCollider\LaravelFormPresenter\Fields\Field;
+use SmallHadronCollider\LaravelFormPresenter\Fields\FieldInterface;
+
+class Boolean extends Field implements FieldInterface
+{
+    public function display($attrs = [])
+    {
+        $yes = $this->value() || $this->value() === null;
+
+        return $this->formBuilder->radio($this->attr("name"), 1, $yes, array_merge($attrs, ["id" => $this->attr("name") . "_yes"])) . " " . $this->formBuilder->label($this->attr("name") . "_yes", "Yes") . " " . $this->formBuilder->radio($this->attr("name"), 0, !$yes, array_merge($attrs, ["id" => $this->attr("name") . "_no"])) . " " . $this->formBuilder->label($this->attr("name") . "_no", "No");
+    }
+}
+```

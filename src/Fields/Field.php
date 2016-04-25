@@ -4,7 +4,7 @@ namespace SmallHadronCollider\LaravelFormPresenter\Fields;
 
 use Collective\Html\FormBuilder;
 
-class Field
+class Field implements FieldInterface
 {
     protected $attr = [];
     protected $value = null;

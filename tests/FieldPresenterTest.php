@@ -1,6 +1,8 @@
 <?php
 
 use SmallHadronCollider\LaravelFormPresenter\FieldPresenter;
+use SmallHadronCollider\LaravelFormPresenter\Fields\Field;
+use SmallHadronCollider\LaravelFormPresenter\Fields\FieldInterface;
 
 class FieldPresenterTest extends TestCase
 {
@@ -148,23 +150,6 @@ class FieldPresenterTest extends TestCase
         $this->assertEquals('<label for="check">Check</label> <input checked="checked" name="check" type="checkbox" value="1" id="check">', $field->render());
     }
 
-    public function testBoolean()
-    {
-        FieldPresenter::presenter($this->presenter);
-
-        $field = new FieldPresenter([
-            "name" => "testing",
-            "label" => "Testing",
-            "type" => "boolean",
-        ]);
-
-        $this->assertEquals('<label for="testing">Testing</label> <input id="testing_yes" checked="checked" name="testing" type="radio" value="1"> <label for="testing_yes">Yes</label> <input id="testing_no" name="testing" type="radio" value="0"> <label for="testing_no">No</label>', $field->render());
-
-        $field->setData(["testing" => false]);
-
-        $this->assertEquals('<label for="testing">Testing</label> <input id="testing_yes" name="testing" type="radio" value="1"> <label for="testing_yes">Yes</label> <input id="testing_no" checked="checked" name="testing" type="radio" value="0"> <label for="testing_no">No</label>', $field->render());
-    }
-
     public function testAttributes()
     {
         FieldPresenter::presenter(function ($attrs) {
@@ -179,6 +164,30 @@ class FieldPresenterTest extends TestCase
         ]);
 
         $this->assertEquals('<label for="name">Name</label> <input id="name" placeholder="Name" class="form__control" name="name" type="text">', $field->render());
+    }
+
+    public function testCustomFieldType()
+    {
+        FieldPresenter::presenter($this->presenter);
+        FieldPresenter::add("custom", TestCustomFieldType::class);
+
+        $field = new FieldPresenter([
+            "name" => "test",
+            "label" => "Test",
+            "type" => "custom",
+        ]);
+
+        $this->assertEquals("label field", $field->render());
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage Field Type must implement FieldInterface
+     **/
+    public function testInvalidCustomFieldType()
+    {
+        FieldPresenter::presenter($this->presenter);
+        FieldPresenter::add("custom", TestInvalidFieldType::class);
     }
 
     /**
@@ -203,3 +212,18 @@ class FieldPresenterTest extends TestCase
         (new FieldPresenter(["type" => "text"]))->render();
     }
 }
+
+class TestCustomFieldType extends Field implements FieldInterface
+{
+    public function label($attrs = [])
+    {
+        return "label";
+    }
+
+    public function display($attrs = [])
+    {
+        return "field";
+    }
+}
+
+class TestInvalidFieldType {}

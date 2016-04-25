@@ -2,6 +2,7 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter;
 
+use ReflectionClass;
 use Closure;
 use Exception;
 use Collective\Html\FormBuilder;
@@ -14,20 +15,7 @@ class FieldPresenter implements Renderable
      **/
     private static $presenterResolver;
 
-    public static function presenter(Closure $presenterResolver = null)
-    {
-        self::$presenterResolver = $presenterResolver;
-    }
-
-    /**
-     * Instance Methods
-     **/
-    private $attr;
-    private $field;
-
-    private $formBuilder;
-
-    private $types = [
+    private static $types = [
         "text" => Fields\Field::class,
         "boolean" => Fields\Boolean::class,
         "checkbox" => Fields\Checked::class,
@@ -42,6 +30,28 @@ class FieldPresenter implements Renderable
         "textarea" => Fields\TextArea::class,
         "select" => Fields\Select::class,
     ];
+
+    public static function presenter(Closure $presenterResolver = null)
+    {
+        self::$presenterResolver = $presenterResolver;
+    }
+
+    public static function add($type, $class)
+    {
+        if (!(new ReflectionClass($class))->implementsInterface(Fields\FieldInterface::class)) {
+            throw new Exception("Field Type must implement FieldInterface");
+        }
+
+        static::$types[$type] = $class;
+    }
+
+    /**
+     * Instance Methods
+     **/
+    private $attr;
+    private $field;
+
+    private $formBuilder;
 
     public function __construct(array $attr)
     {
@@ -119,12 +129,12 @@ class FieldPresenter implements Renderable
 
     private function getField(array $attr)
     {
-        if (!array_key_exists($attr["type"], $this->types)) {
-            $allowed = implode(", ", array_keys($this->types));
+        if (!array_key_exists($attr["type"], static::$types)) {
+            $allowed = implode(", ", array_keys(static::$types));
             throw new Exception("Invalid type: {$attr["type"]} (allowed types: {$allowed})");
         }
 
-        $type = $this->types[$attr["type"]];
+        $type = static::$types[$attr["type"]];
 
         return new $type($attr);
     }
