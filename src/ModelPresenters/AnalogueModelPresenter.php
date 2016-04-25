@@ -12,7 +12,7 @@ class AnalogueModelPresenter implements ModelPresenterInterface
     {
         $data = [];
 
-        foreach ($model->toArray() as $property => $value) {
+        foreach ($model->getEntityAttributes() as $property => $value) {
             $collection = $value instanceof Collection || $value instanceof CollectionProxy;
             $data[$property] = $collection ? $value->pluck("id")->unique()->all() : $value;
         }
