@@ -95,10 +95,80 @@ class PersonController extends Controller
 {!! $form->close() !!}
 ```
 
-### Adding A Custom Field Type
+### Custom Field Rendering
+
+You can use render a field however you like:
 
 ```php
 <?php
+
+// app/Providers/AppServiceProvider.php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+use SmallHadronCollider\LaravelFormPresenter\FieldPresenter;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        FieldPresenter::presenter(function ($attrs) {
+            return view("forms/field", $attrs);
+        });
+    }
+}
+```
+
+```php
+{{-- forms/field.blade.php --}}
+
+<div class="form__group {{ $errors->has($name) ? "form__group--error" : "" }}">
+    {!! $field->label() !!}
+
+    @if ($errors->has($name))
+        <span class="form__info">{{ $errors->first($name) }}</span>
+    @endif
+
+    {!! $field->display(["class" => "form__control form__control--grouped form__control--{$type}"]) !!}
+</div>
+```
+
+### Bootstrap Field Rendering
+
+You can use the built-in Bootstrap template:
+
+```php
+<?php
+
+// app/Providers/AppServiceProvider.php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+use SmallHadronCollider\LaravelFormPresenter\FieldPresenter;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        FieldPresenter::presenter(function ($attrs) {
+            return view("smallhadroncollider/laravel-form-presenter::bootstrap", $attrs);
+        });
+    }
+}
+```
+
+### Adding A Custom Field Type
+
+You can easily add your own custom field type by extending the Field class:
+
+```php
+<?php
+
+// app/Http/Presenters/Forms/Fields/Boolean.php
 
 namespace App\Http\Presenters\Forms\Fields;
 
@@ -129,3 +199,24 @@ class Boolean extends Field implements FieldInterface
     </label>
 </div>
 ```
+
+```php
+<?php
+
+// app/Providers/AppServiceProvider
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+use SmallHadronCollider\LaravelFormPresenter\FieldPresenter;
+use App\Http\Presenters\Forms\Fields\Boolean;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        // Add boolean field type
+        FieldPresenter::add("boolean", Boolean::class);
+    }
+}
