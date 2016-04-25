@@ -2,7 +2,7 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter\ModelPresenters;
 
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 use SmallHadronCollider\LaravelFormPresenter\ModelPresenterInterface;
 
 class EloquentModelPresenter implements ModelPresenterInterface
@@ -11,7 +11,7 @@ class EloquentModelPresenter implements ModelPresenterInterface
     {
         $data = [];
 
-        foreach ($model->toArray() as $property => $value) {
+        foreach ($model as $property => $value) {
             $collection = $value instanceof Collection;
             $data[$property] = $collection ? $value->pluck("id")->unique()->all() : $value;
         }
