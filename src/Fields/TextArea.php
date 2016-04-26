@@ -2,15 +2,20 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter\Fields;
 
-class TextArea extends Field implements FieldInterface
+class TextArea extends AbstractField implements FieldInterface
 {
+    public function label($attrs = [])
+    {
+        return $this->formBuilder->label($this->name, $this->label, $attrs);
+    }
+
     public function display($attrs = [])
     {
         $attrs = array_merge([
-            "id" => $this->attr("name"),
-            "placeholder" => $this->attr("label"),
+            "id" => $this->name,
+            "placeholder" => $this->label,
         ], $attrs);
 
-        return $this->formBuilder->textarea($this->attr("name"), $this->value(), $attrs);
+        return $this->formBuilder->textarea($this->name, $this->value(), $attrs);
     }
 }

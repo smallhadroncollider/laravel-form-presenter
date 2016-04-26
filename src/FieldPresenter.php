@@ -17,7 +17,6 @@ class FieldPresenter implements Renderable
 
     private static $types = [
         "text" => Fields\Field::class,
-        "boolean" => Fields\Boolean::class,
         "checkbox" => Fields\Checked::class,
         "radio" => Fields\Checked::class,
         "email" => Fields\Field::class,
@@ -48,16 +47,12 @@ class FieldPresenter implements Renderable
     /**
      * Instance Methods
      **/
-    private $attr;
     private $field;
-
     private $formBuilder;
 
     public function __construct(array $attr)
     {
-        $this->attr = $this->getAttributes($attr);
         $this->field = $this->getField($attr);
-
         $this->formBuilder = app()->make(FormBuilder::class);
     }
 
@@ -67,15 +62,12 @@ class FieldPresenter implements Renderable
 
         return $presenter([
             "field" => $this->field,
-            "name" => $this->attr["name"],
-            "type" => $this->attr["type"],
-            "label" => $this->attr["label"],
         ]);
     }
 
     public function hasFiles()
     {
-        return $this->attr["type"] == "file";
+        return $this->field->type() == "file";
     }
 
     public function __toString()
@@ -85,7 +77,7 @@ class FieldPresenter implements Renderable
 
     public function id()
     {
-        return $this->attr["name"];
+        return $this->field->name();
     }
 
     public function fieldNames(array $fieldNames = [])
@@ -96,10 +88,10 @@ class FieldPresenter implements Renderable
 
     public function setData(array $data)
     {
-        $name = $this->attr["name"];
+        $id = $this->id();
 
-        if (array_key_exists($name, $data)) {
-            $this->field->setValue($data[$name]);
+        if (array_key_exists($id, $data)) {
+            $this->field->setValue($data[$id]);
         }
 
         return $this;
@@ -116,26 +108,17 @@ class FieldPresenter implements Renderable
         };
     }
 
-    private function getAttributes(array $attr)
-    {
-        foreach (["type", "name", "label"] as $property) {
-            if (!array_key_exists($property, $attr)) {
-                throw new Exception("{$property} property missing");
-            }
-        }
-
-        return $attr;
-    }
-
     private function getField(array $attr)
     {
-        if (!array_key_exists($attr["type"], static::$types)) {
+        $type = array_get($attr, "type");
+
+        if (!array_key_exists($type, static::$types)) {
             $allowed = implode(", ", array_keys(static::$types));
-            throw new Exception("Invalid type: {$attr["type"]} (allowed types: {$allowed})");
+            throw new Exception("Invalid type: {$type} (allowed types: {$allowed})");
         }
 
-        $type = static::$types[$attr["type"]];
+        $typeClass = static::$types[$type];
 
-        return new $type($attr);
+        return new $typeClass($attr);
     }
 }

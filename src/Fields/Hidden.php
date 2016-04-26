@@ -2,7 +2,7 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter\Fields;
 
-class Hidden extends Field implements FieldInterface
+class Hidden extends AbstractField implements FieldInterface
 {
     public function label($attrs = [])
     {
@@ -11,6 +11,6 @@ class Hidden extends Field implements FieldInterface
 
     public function display($attrs = [])
     {
-        return $this->formBuilder->hidden($this->attr("name"), $this->value(), $attrs);
+        return $this->formBuilder->hidden($this->name, $this->value(), $attrs);
     }
 }
