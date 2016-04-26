@@ -13,13 +13,8 @@ class Select extends AbstractField implements FieldInterface
 
     public function display($attrs = [])
     {
-        $attrs = array_merge([
-            "id" => $this->name,
-        ], $attrs);
-
-        if ($this->isRequired()) {
-            $attrs["required"] = "true";
-        }
+        $attrs = $this->setID($attrs);
+        $attrs = $this->setRequired($attrs);
 
         return $this->formBuilder->select($this->name, $this->items, $this->value(), $attrs);
     }

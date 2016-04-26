@@ -11,14 +11,9 @@ class TextArea extends AbstractField implements FieldInterface
 
     public function display($attrs = [])
     {
-        $attrs = array_merge([
-            "id" => $this->name,
-            "placeholder" => $this->label,
-        ], $attrs);
-
-        if ($this->isRequired()) {
-            $attrs["required"] = "true";
-        }
+        $attrs = $this->setID($attrs);
+        $attrs = $this->setPlaceholder($attrs);
+        $attrs = $this->setRequired($attrs);
 
         return $this->formBuilder->textarea($this->name, $this->value(), $attrs);
     }

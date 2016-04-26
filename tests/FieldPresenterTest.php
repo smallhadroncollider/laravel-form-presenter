@@ -163,7 +163,7 @@ class FieldPresenterTest extends TestCase
             "type" => "text",
         ]);
 
-        $this->assertEquals('<label for="name">Name</label> <input id="name" placeholder="Name" class="form__control" name="name" type="text">', $field->render());
+        $this->assertEquals('<label for="name">Name</label> <input class="form__control" id="name" placeholder="Name" name="name" type="text">', $field->render());
     }
 
     public function testCustomFieldType()

@@ -74,9 +74,26 @@ abstract class AbstractField
         }
     }
 
-    protected function isRequired()
+    protected function setRequired($attr = [])
     {
         $rules = $this->rules ? : [];
-        return in_array("required", $rules);
+
+        if (in_array("required", $rules)) {
+            $attr["required"] = "true";
+        }
+
+        return $attr;
+    }
+
+    protected function setPlaceholder($attr = [])
+    {
+        $attr["placeholder"] = $this->label;
+        return $attr;
+    }
+
+    protected function setID($attr = [])
+    {
+        $attr["id"] = $this->name;
+        return $attr;
     }
 }
