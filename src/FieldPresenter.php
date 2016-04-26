@@ -82,7 +82,12 @@ class FieldPresenter implements Fieldlike
 
     public function rules(array $rules = [])
     {
-        $rules[$this->field->name()] = $this->field->rules();
+        $fieldRules = $this->field->rules();
+
+        if ($fieldRules) {
+            $rules[$this->field->name()] = $fieldRules;
+        }
+
         return $rules;
     }
 

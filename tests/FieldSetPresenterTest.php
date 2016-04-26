@@ -93,6 +93,8 @@ class FieldSetPresenterTest extends TestCase
             "name" => ["required"],
         ], $fieldset->rules());
 
+
+        // Test nested rules
         $fieldset = new TestNestedFieldSetPresenter();
 
         $this->assertEquals([
@@ -100,12 +102,19 @@ class FieldSetPresenterTest extends TestCase
             "name" => ["required"],
         ], $fieldset->rules());
 
+
+        // Test excluded fields are ignored
         $fieldset = new TestNestedFieldSetPresenter();
         $fieldset->exclude(["name"]);
 
         $this->assertEquals([
             "email" => ["required", "email"],
         ], $fieldset->rules());
+
+
+        // Test with no rules
+        $fieldset = new TestNoRulesFieldSetPresenter();
+        $this->assertEquals([], $fieldset->rules());
     }
 }
 
@@ -189,5 +198,19 @@ class TestModelPresenter implements ModelPresenterInterface
     public function present($model)
     {
         return $model->attrs;
+    }
+}
+
+class TestNoRulesFieldSetPresenter extends FieldSetPresenter
+{
+    protected function fields()
+    {
+        return [
+            $this->field([
+                "type" => "text",
+                "name" => "name",
+                "label" => "Name",
+            ]),
+        ];
     }
 }
