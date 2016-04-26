@@ -2,6 +2,9 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter\Fields;
 
+use Illuminate\Foundation\Testing\TestCase;
+use Faker\Generator;
+
 class TextArea extends AbstractField implements FieldInterface
 {
     public function label($attrs = [])
@@ -16,5 +19,10 @@ class TextArea extends AbstractField implements FieldInterface
         $attrs = $this->setRequired($attrs);
 
         return $this->formBuilder->textarea($this->name, $this->value(), $attrs);
+    }
+
+    public function test(TestCase $test, Generator $faker)
+    {
+        return $test->type(implode(" ", $faker->words()), $this->name);
     }
 }

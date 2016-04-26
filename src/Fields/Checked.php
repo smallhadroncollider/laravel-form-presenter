@@ -2,6 +2,9 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter\Fields;
 
+use Illuminate\Foundation\Testing\TestCase;
+use Faker\Generator;
+
 class Checked extends AbstractField implements FieldInterface
 {
     protected $valueAttr;
@@ -23,5 +26,10 @@ class Checked extends AbstractField implements FieldInterface
         $this->valueAttr = array_get($attr, "value");
 
         return $attr;
+    }
+
+    public function test(TestCase $test, Generator $faker)
+    {
+        return mt_rand(0, 1) ? $test->check($this->name) : $test->uncheck($this->name);
     }
 }

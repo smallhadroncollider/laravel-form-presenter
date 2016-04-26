@@ -9,6 +9,7 @@ Dealing with forms in plain HTML leads to a horrible mess. Using the [Laravel Co
 - Easy to add your own field types
 - Adds CSRF field automatically
 - Adds required attributes on required fields
+- (Almost) Automatic integration testing
 - Automatically detects `file` field types and adds the necessary form attributes
 
 ## Example
@@ -213,22 +214,33 @@ You can easily add your own custom field type by extending the Field class:
 
 namespace App\Http\Presenters\Forms\Fields;
 
+use Illuminate\Foundation\Testing\TestCase;
+use Faker\Generator;
+
 use SmallHadronCollider\LaravelFormPresenter\Fields\AbstractField;
 use SmallHadronCollider\LaravelFormPresenter\Fields\FieldInterface;
 
 class Boolean extends AbstractField implements FieldInterface
 {
+    // The html to display for the label
     public function label($attrs = [])
     {
         return $this->formBuilder->label($this->name, $this->label, $attrs);
     }
 
+    // The html to display for the field
     public function display($attrs = [])
     {
         return view("embellish::forms/boolean", [
             "name" => $this->name,
             "value" => $this->value() || $this->value() === null,
         ]);
+    }
+
+    // Test function for integration testing
+    public function test(TestCase $test, Generator $faker)
+    {
+        return mt_rand(0, 1) ? $test->check($this->name) : $test->uncheck($this->name);
     }
 }
 ```
@@ -267,6 +279,39 @@ class AppServiceProvider extends ServiceProvider
     }
 }
 ```
+
+## Integration Testing
+
+You can setup integration tests for any fieldset automatically:
+
+```php
+<?php
+
+// tests\AddPersonTest.php
+
+use TestCase;
+use SmallHadronCollider\LaravelFormPresenter\PubliciseFormMethods;
+use App\Http\Presenters\FieldSets\PersonFieldSet;
+
+class AddPersonTest extends TestCase
+{
+    // puts form filling methods (type(), select(), etc.) into public scope using __call()
+    use PubliciseFormMethods;
+
+    public function testPersonForm()
+    {
+        // create fieldset
+        $fieldset = new PersonFieldSet();
+
+        // visit page
+        $test = $this->visit("/admin/people/create");
+
+        // populate test form automatically, then submit
+        $fieldset->populateTest($test)->press("Create Person")->assertResponseOk();
+    }
+}
+```
+
 
 ## License
 

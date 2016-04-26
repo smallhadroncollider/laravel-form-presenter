@@ -5,6 +5,9 @@ namespace SmallHadronCollider\LaravelFormPresenter\Fields;
 use Exception;
 use Collective\Html\FormBuilder;
 
+use Illuminate\Foundation\Testing\TestCase;
+use Faker\Generator;
+
 abstract class AbstractField
 {
     protected $name;
@@ -64,6 +67,7 @@ abstract class AbstractField
 
     abstract public function display();
     abstract public function label();
+    abstract public function test(TestCase $test, Generator $faker);
 
     protected function checkAttr(array $attr)
     {
