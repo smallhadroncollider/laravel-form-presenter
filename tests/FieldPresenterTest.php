@@ -192,7 +192,7 @@ class FieldPresenterTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessageRegExp /^Invalid type: invalid \(allowed types: [a-z,\s]+\)$/
+     * @expectedExceptionMessageRegExp /^Invalid type: invalid/
      **/
     public function testInvalidType()
     {
