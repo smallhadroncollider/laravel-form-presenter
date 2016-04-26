@@ -16,6 +16,10 @@ class TextArea extends AbstractField implements FieldInterface
             "placeholder" => $this->label,
         ], $attrs);
 
+        if ($this->isRequired()) {
+            $attrs["required"] = "true";
+        }
+
         return $this->formBuilder->textarea($this->name, $this->value(), $attrs);
     }
 }

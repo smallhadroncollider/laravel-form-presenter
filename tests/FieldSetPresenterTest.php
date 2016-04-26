@@ -18,19 +18,19 @@ class FieldSetPresenterTest extends TestCase
     public function testBasic()
     {
         $fieldset = new TestFieldSetPresenter();
-        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $fieldset->render());
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text">', $fieldset->render());
     }
 
     public function testToString()
     {
         $fieldset = new TestFieldSetPresenter();
-        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $fieldset);
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text">', $fieldset);
     }
 
     public function testNested()
     {
         $fieldset = new TestNestedFieldSetPresenter();
-        $this->assertEquals('<label for="email">Email</label><input id="email" placeholder="Email" name="email" type="email"><label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $fieldset->render());
+        $this->assertEquals('<label for="email">Email</label><input id="email" placeholder="Email" required="true" name="email" type="email"><label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text">', $fieldset->render());
     }
 
     public function testWrapped()
@@ -44,7 +44,7 @@ class FieldSetPresenterTest extends TestCase
         $form = (new TestFieldSetPresenter())->form();
 
         $this->assertInstanceOf(FormPresenter::class, $form);
-        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->display());
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text">', $form->display());
     }
 
     public function testFieldNames()
@@ -67,7 +67,7 @@ class FieldSetPresenterTest extends TestCase
         $fieldset = new TestFieldSetPresenter();
         $fieldset->setModel(new TestModel());
 
-        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text" value="Test">', $fieldset->render());
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text" value="Test">', $fieldset->render());
     }
 
     public function testDynamicField()

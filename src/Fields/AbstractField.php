@@ -11,7 +11,8 @@ abstract class AbstractField
     protected $label;
     protected $type;
     protected $value;
-    protected $rules;
+
+    protected $rules = [];
 
     public function __construct(array $attr)
     {
@@ -37,7 +38,7 @@ abstract class AbstractField
 
     public function rules()
     {
-        return $this->rules;
+        return $this->rules ? : [];
     }
 
     public function __toString()
@@ -71,5 +72,11 @@ abstract class AbstractField
                 throw new Exception("{$property} property missing");
             }
         }
+    }
+
+    protected function isRequired()
+    {
+        $rules = $this->rules ? : [];
+        return in_array("required", $rules);
     }
 }

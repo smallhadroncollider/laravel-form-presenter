@@ -16,6 +16,10 @@ class Field extends AbstractField implements FieldInterface
             "placeholder" => $this->label,
         ], $attrs);
 
+        if ($this->isRequired()) {
+            $attrs["required"] = "true";
+        }
+
         return $this->formBuilder->{$this->type}($this->name, $this->value(), $attrs);
     }
 }
