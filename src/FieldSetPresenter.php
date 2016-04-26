@@ -79,22 +79,29 @@ abstract class FieldSetPresenter implements Fieldlike
 
     public function rules(array $rules = [])
     {
-        return array_reduce($this->getFields(), function ($rules, $field) {
+        $result = [];
+
+        $rules = array_reduce($this->getFields(), function ($rules, $field) {
             return $field->rules($rules);
         }, $rules);
+
+        foreach ($rules as $name => $rule) {
+            if (!in_array($name, $this->exclude)) {
+                $result[$name] = $rule;
+            }
+        }
+
+        return $result;
     }
 
     public function fieldNames(array $fieldNames = [])
     {
-        return array_reduce($this->getFields(), function ($fieldNames, $field) {
+        $fieldNames = array_reduce($this->getFields(), function ($fieldNames, $field) {
             return $field->fieldNames($fieldNames);
         }, $fieldNames);
-    }
 
-    public function fieldNamesExcluding(array $excluding)
-    {
-        return array_values(array_filter($this->fieldNames(), function ($fieldName) use ($excluding) {
-            return !in_array($fieldName, $excluding);
+        return array_values(array_filter($fieldNames, function ($fieldName) {
+            return !in_array($fieldName, $this->exclude);
         }));
     }
 

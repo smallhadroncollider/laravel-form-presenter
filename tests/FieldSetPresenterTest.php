@@ -56,7 +56,8 @@ class FieldSetPresenterTest extends TestCase
     public function testFieldNamesExcluding()
     {
         $fieldset = new TestNestedFieldSetPresenter();
-        $this->assertEquals(["name"], $fieldset->fieldNamesExcluding(["email"]));
+        $fieldset->exclude(["email"]);
+        $this->assertEquals(["name"], $fieldset->fieldNames());
     }
 
     public function testSetModel()
@@ -97,6 +98,13 @@ class FieldSetPresenterTest extends TestCase
         $this->assertEquals([
             "email" => ["required", "email"],
             "name" => ["required"],
+        ], $fieldset->rules());
+
+        $fieldset = new TestNestedFieldSetPresenter();
+        $fieldset->exclude(["name"]);
+
+        $this->assertEquals([
+            "email" => ["required", "email"],
         ], $fieldset->rules());
     }
 }
