@@ -2,7 +2,7 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter;
 
-abstract class FieldSetPresenter implements Renderable
+abstract class FieldSetPresenter implements Fieldlike
 {
     protected $exclude = [];
     protected $only = [];
@@ -35,7 +35,7 @@ abstract class FieldSetPresenter implements Renderable
 
     public function render()
     {
-        $content = array_reduce($this->getFields(), function ($html, Renderable $field) {
+        $content = array_reduce($this->getFields(), function ($html, Fieldlike $field) {
             $field->setData($this->model);
             return $this->shouldRenderField($field) ? $html . $field->render() : $html;
         }, "");
@@ -77,6 +77,13 @@ abstract class FieldSetPresenter implements Renderable
         return $this;
     }
 
+    public function rules(array $rules = [])
+    {
+        return array_reduce($this->getFields(), function ($rules, $field) {
+            return $field->rules($rules);
+        }, $rules);
+    }
+
     public function fieldNames(array $fieldNames = [])
     {
         return array_reduce($this->getFields(), function ($fieldNames, $field) {
@@ -105,7 +112,7 @@ abstract class FieldSetPresenter implements Renderable
         return array_key_exists($attr, $this->model) ? $this->model[$attr] : null;
     }
 
-    protected function shouldRenderField(Renderable $field)
+    protected function shouldRenderField(Fieldlike $field)
     {
         $excluded = in_array($field->id(), $this->exclude);
         $notIncluded = !empty($this->only) && !in_array($field->id(), $this->only);

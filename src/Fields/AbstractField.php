@@ -11,6 +11,7 @@ abstract class AbstractField
     protected $label;
     protected $type;
     protected $value;
+    protected $rules;
 
     public function __construct(array $attr)
     {
@@ -34,6 +35,11 @@ abstract class AbstractField
         return $this->type;
     }
 
+    public function rules()
+    {
+        return $this->rules;
+    }
+
     public function __toString()
     {
         return $this->display();
@@ -43,7 +49,7 @@ abstract class AbstractField
     {
         $this->checkAttr($attr);
 
-        foreach (["name", "type", "label", "value"] as $property) {
+        foreach (["name", "type", "label", "value", "rules"] as $property) {
             $this->{$property} = array_get($attr, $property);
         }
 

@@ -83,6 +83,22 @@ class FieldSetPresenterTest extends TestCase
 
         $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text" value="Test">', $fieldset->render());
     }
+
+    public function testRules()
+    {
+        $fieldset = new TestFieldSetPresenter();
+
+        $this->assertEquals([
+            "name" => ["required"],
+        ], $fieldset->rules());
+
+        $fieldset = new TestNestedFieldSetPresenter();
+
+        $this->assertEquals([
+            "email" => ["required", "email"],
+            "name" => ["required"],
+        ], $fieldset->rules());
+    }
 }
 
 class TestFieldSetPresenter extends FieldSetPresenter
@@ -94,6 +110,7 @@ class TestFieldSetPresenter extends FieldSetPresenter
                 "type" => "text",
                 "name" => "name",
                 "label" => "Name",
+                "rules" => ["required"],
             ]),
         ];
     }
@@ -108,6 +125,7 @@ class TestNestedFieldSetPresenter extends FieldSetPresenter
                 "type" => "email",
                 "name" => "email",
                 "label" => "Email",
+                "rules" => ["required", "email"],
             ]),
             new TestFieldSetPresenter(),
         ];
