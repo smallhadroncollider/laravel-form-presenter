@@ -8,7 +8,7 @@ use Exception;
 use Collective\Html\FormBuilder;
 use SmallHadronCollider\LaravelFormPresenter\Fields;
 
-class FieldPresenter implements Renderable
+class FieldPresenter implements Fieldlike
 {
     /**
      * Static Methods
@@ -78,6 +78,17 @@ class FieldPresenter implements Renderable
     public function id()
     {
         return $this->field->name();
+    }
+
+    public function rules(array $rules = [])
+    {
+        $fieldRules = $this->field->rules();
+
+        if ($fieldRules) {
+            $rules[$this->field->name()] = $fieldRules;
+        }
+
+        return $rules;
     }
 
     public function fieldNames(array $fieldNames = [])
