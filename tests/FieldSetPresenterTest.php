@@ -18,19 +18,19 @@ class FieldSetPresenterTest extends TestCase
     public function testBasic()
     {
         $fieldset = new TestFieldSetPresenter();
-        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $fieldset->render());
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text">', $fieldset->render());
     }
 
     public function testToString()
     {
         $fieldset = new TestFieldSetPresenter();
-        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $fieldset);
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text">', $fieldset);
     }
 
     public function testNested()
     {
         $fieldset = new TestNestedFieldSetPresenter();
-        $this->assertEquals('<label for="email">Email</label><input id="email" placeholder="Email" name="email" type="email"><label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $fieldset->render());
+        $this->assertEquals('<label for="email">Email</label><input id="email" placeholder="Email" required="true" name="email" type="email"><label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text">', $fieldset->render());
     }
 
     public function testWrapped()
@@ -44,7 +44,7 @@ class FieldSetPresenterTest extends TestCase
         $form = (new TestFieldSetPresenter())->form();
 
         $this->assertInstanceOf(FormPresenter::class, $form);
-        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->display());
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text">', $form->display());
     }
 
     public function testFieldNames()
@@ -56,7 +56,8 @@ class FieldSetPresenterTest extends TestCase
     public function testFieldNamesExcluding()
     {
         $fieldset = new TestNestedFieldSetPresenter();
-        $this->assertEquals(["name"], $fieldset->fieldNamesExcluding(["email"]));
+        $fieldset->exclude(["email"]);
+        $this->assertEquals(["name"], $fieldset->fieldNames());
     }
 
     public function testSetModel()
@@ -66,7 +67,7 @@ class FieldSetPresenterTest extends TestCase
         $fieldset = new TestFieldSetPresenter();
         $fieldset->setModel(new TestModel());
 
-        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text" value="Test">', $fieldset->render());
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text" value="Test">', $fieldset->render());
     }
 
     public function testDynamicField()
@@ -83,6 +84,38 @@ class FieldSetPresenterTest extends TestCase
 
         $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text" value="Test">', $fieldset->render());
     }
+
+    public function testRules()
+    {
+        $fieldset = new TestFieldSetPresenter();
+
+        $this->assertEquals([
+            "name" => ["required"],
+        ], $fieldset->rules());
+
+
+        // Test nested rules
+        $fieldset = new TestNestedFieldSetPresenter();
+
+        $this->assertEquals([
+            "email" => ["required", "email"],
+            "name" => ["required"],
+        ], $fieldset->rules());
+
+
+        // Test excluded fields are ignored
+        $fieldset = new TestNestedFieldSetPresenter();
+        $fieldset->exclude(["name"]);
+
+        $this->assertEquals([
+            "email" => ["required", "email"],
+        ], $fieldset->rules());
+
+
+        // Test with no rules
+        $fieldset = new TestNoRulesFieldSetPresenter();
+        $this->assertEquals([], $fieldset->rules());
+    }
 }
 
 class TestFieldSetPresenter extends FieldSetPresenter
@@ -94,6 +127,7 @@ class TestFieldSetPresenter extends FieldSetPresenter
                 "type" => "text",
                 "name" => "name",
                 "label" => "Name",
+                "rules" => ["required"],
             ]),
         ];
     }
@@ -108,6 +142,7 @@ class TestNestedFieldSetPresenter extends FieldSetPresenter
                 "type" => "email",
                 "name" => "email",
                 "label" => "Email",
+                "rules" => ["required", "email"],
             ]),
             new TestFieldSetPresenter(),
         ];
@@ -163,5 +198,19 @@ class TestModelPresenter implements ModelPresenterInterface
     public function present($model)
     {
         return $model->attrs;
+    }
+}
+
+class TestNoRulesFieldSetPresenter extends FieldSetPresenter
+{
+    protected function fields()
+    {
+        return [
+            $this->field([
+                "type" => "text",
+                "name" => "name",
+                "label" => "Name",
+            ]),
+        ];
     }
 }

@@ -8,6 +8,7 @@ Dealing with forms in plain HTML leads to a horrible mess. Using the [Laravel Co
 
 - Easy to add your own field types
 - Adds CSRF field automatically
+- Adds required attributes on required fields
 - Automatically detects `file` field types and adds the necessary form attributes
 
 ## Example
@@ -15,7 +16,7 @@ Dealing with forms in plain HTML leads to a horrible mess. Using the [Laravel Co
 ```php
 <?php
 
-// PersonFieldSet.php
+// app/Http/Presenters/PersonFieldSet.php
 
 namespace App\Http\Presenters;
 
@@ -36,12 +37,14 @@ class PersonFieldSet extends FieldSetPresenter
                 "name" => "last_name",
                 "type" => "text",
                 "label" => "Last Name",
+                "rules" => ["required"],
             ]),
 
             $this->field([
                 "name" => "age",
                 "type" => "number",
                 "label" => "Age",
+                "rules" => ["required"],
             ]),
 
             $this->field([
@@ -57,7 +60,7 @@ class PersonFieldSet extends FieldSetPresenter
 ```php
 <?php
 
-// PersonController.php
+// app/Http/Controllers/PersonController.php
 
 namespace App\Http\Controllers;
 
@@ -97,6 +100,27 @@ class PersonController extends Controller
         $this->repository->update($person, $data);
 
         return redirect("/people/{$person->id}");
+    }
+}
+```
+
+Get the validation rules from the fieldset:
+
+```php
+<?php
+
+// app/Http/Request/PersonFormRequest.php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Presenters\FieldSets\PersonFieldSet;
+
+class PersonFormRequest extends FormRequest
+{
+    public function rules(PersonFieldSet $fieldset)
+    {
+        return $fieldset->rules();
     }
 }
 ```

@@ -12,6 +12,8 @@ abstract class AbstractField
     protected $type;
     protected $value;
 
+    protected $rules = [];
+
     public function __construct(array $attr)
     {
         $this->formBuilder = app()->make(FormBuilder::class);
@@ -34,6 +36,11 @@ abstract class AbstractField
         return $this->type;
     }
 
+    public function rules()
+    {
+        return $this->rules ? : [];
+    }
+
     public function __toString()
     {
         return $this->display();
@@ -43,7 +50,7 @@ abstract class AbstractField
     {
         $this->checkAttr($attr);
 
-        foreach (["name", "type", "label", "value"] as $property) {
+        foreach (["name", "type", "label", "value", "rules"] as $property) {
             $this->{$property} = array_get($attr, $property);
         }
 
@@ -65,5 +72,28 @@ abstract class AbstractField
                 throw new Exception("{$property} property missing");
             }
         }
+    }
+
+    protected function setRequired($attr = [])
+    {
+        $rules = $this->rules ? : [];
+
+        if (in_array("required", $rules)) {
+            $attr["required"] = "true";
+        }
+
+        return $attr;
+    }
+
+    protected function setPlaceholder($attr = [])
+    {
+        $attr["placeholder"] = $this->label;
+        return $attr;
+    }
+
+    protected function setID($attr = [])
+    {
+        $attr["id"] = $this->name;
+        return $attr;
     }
 }

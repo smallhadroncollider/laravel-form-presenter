@@ -2,7 +2,7 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter;
 
-abstract class FieldSetPresenter implements Renderable
+abstract class FieldSetPresenter implements Fieldlike
 {
     protected $exclude = [];
     protected $only = [];
@@ -35,7 +35,7 @@ abstract class FieldSetPresenter implements Renderable
 
     public function render()
     {
-        $content = array_reduce($this->getFields(), function ($html, Renderable $field) {
+        $content = array_reduce($this->getFields(), function ($html, Fieldlike $field) {
             $field->setData($this->model);
             return $this->shouldRenderField($field) ? $html . $field->render() : $html;
         }, "");
@@ -77,17 +77,31 @@ abstract class FieldSetPresenter implements Renderable
         return $this;
     }
 
-    public function fieldNames(array $fieldNames = [])
+    public function rules(array $rules = [])
     {
-        return array_reduce($this->getFields(), function ($fieldNames, $field) {
-            return $field->fieldNames($fieldNames);
-        }, $fieldNames);
+        $result = [];
+
+        $rules = array_reduce($this->getFields(), function ($rules, $field) {
+            return $field->rules($rules);
+        }, $rules);
+
+        foreach ($rules as $name => $rule) {
+            if (!in_array($name, $this->exclude)) {
+                $result[$name] = $rule;
+            }
+        }
+
+        return $result;
     }
 
-    public function fieldNamesExcluding(array $excluding)
+    public function fieldNames(array $fieldNames = [])
     {
-        return array_values(array_filter($this->fieldNames(), function ($fieldName) use ($excluding) {
-            return !in_array($fieldName, $excluding);
+        $fieldNames = array_reduce($this->getFields(), function ($fieldNames, $field) {
+            return $field->fieldNames($fieldNames);
+        }, $fieldNames);
+
+        return array_values(array_filter($fieldNames, function ($fieldName) {
+            return !in_array($fieldName, $this->exclude);
         }));
     }
 
@@ -105,7 +119,7 @@ abstract class FieldSetPresenter implements Renderable
         return array_key_exists($attr, $this->model) ? $this->model[$attr] : null;
     }
 
-    protected function shouldRenderField(Renderable $field)
+    protected function shouldRenderField(Fieldlike $field)
     {
         $excluded = in_array($field->id(), $this->exclude);
         $notIncluded = !empty($this->only) && !in_array($field->id(), $this->only);
