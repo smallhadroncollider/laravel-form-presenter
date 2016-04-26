@@ -97,6 +97,12 @@ class FieldPresenter implements Fieldlike
         return $fieldNames;
     }
 
+    public function flatFields(array $fields = [])
+    {
+        $fields[$this->field->name()] = $this->field;
+        return $fields;
+    }
+
     public function setData(array $data)
     {
         $id = $this->id();

@@ -4,6 +4,7 @@ use SmallHadronCollider\LaravelFormPresenter\FormPresenter;
 use SmallHadronCollider\LaravelFormPresenter\FieldPresenter;
 use SmallHadronCollider\LaravelFormPresenter\FieldSetPresenter;
 use SmallHadronCollider\LaravelFormPresenter\ModelPresenterInterface;
+use SmallHadronCollider\LaravelFormPresenter\Fields\AbstractField;
 
 class FieldSetPresenterTest extends TestCase
 {

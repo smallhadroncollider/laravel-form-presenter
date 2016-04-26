@@ -2,6 +2,9 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter;
 
+use Faker\Factory;
+use Illuminate\Foundation\Testing\TestCase;
+
 abstract class FieldSetPresenter implements Fieldlike
 {
     protected $exclude = [];
@@ -79,19 +82,11 @@ abstract class FieldSetPresenter implements Fieldlike
 
     public function rules(array $rules = [])
     {
-        $result = [];
-
         $rules = array_reduce($this->getFields(), function ($rules, $field) {
             return $field->rules($rules);
         }, $rules);
 
-        foreach ($rules as $name => $rule) {
-            if (!in_array($name, $this->exclude)) {
-                $result[$name] = $rule;
-            }
-        }
-
-        return $result;
+        return $this->filterExcluded($rules);
     }
 
     public function fieldNames(array $fieldNames = [])
@@ -114,6 +109,26 @@ abstract class FieldSetPresenter implements Fieldlike
         return $this->fields;
     }
 
+    public function flatFields(array $fields = [])
+    {
+        $fields = array_reduce($this->getFields(), function ($fields, $field) {
+            return $field->flatFields($fields);
+        }, $fields);
+
+        return $this->filterExcluded($fields);
+    }
+
+    public function populateTest($test)
+    {
+        $faker = Factory::create();
+
+        foreach ($this->flatFields() as $field) {
+            $field->test($test, $faker);
+        }
+
+        return $test;
+    }
+
     protected function model($attr)
     {
         return array_key_exists($attr, $this->model) ? $this->model[$attr] : null;
@@ -130,6 +145,19 @@ abstract class FieldSetPresenter implements Fieldlike
     protected function wrap($content)
     {
         return $content;
+    }
+
+    protected function filterExcluded(array $data)
+    {
+        $results = [];
+
+        foreach ($data as $name => $rule) {
+            if (!in_array($name, $this->exclude)) {
+                $results[$name] = $rule;
+            }
+        }
+
+        return $results;
     }
 
     abstract protected function fields();

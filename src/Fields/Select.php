@@ -2,6 +2,9 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter\Fields;
 
+use Illuminate\Foundation\Testing\TestCase;
+use Faker\Generator;
+
 class Select extends AbstractField implements FieldInterface
 {
     protected $items = [];
@@ -25,5 +28,14 @@ class Select extends AbstractField implements FieldInterface
         $this->items = array_get($attr, "items", []);
 
         return $attr;
+    }
+
+    public function test(TestCase $test, Generator $faker)
+    {
+        $value = $faker->randomElement(array_filter(array_keys($this->items)), function ($value) {
+            return !!$value;
+        });
+
+        return $test->select($value, $this->name);
     }
 }
