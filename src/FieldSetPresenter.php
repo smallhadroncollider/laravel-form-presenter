@@ -53,11 +53,6 @@ abstract class FieldSetPresenter implements Fieldlike
         }));
     }
 
-    public function __toString()
-    {
-        return $this->render();
-    }
-
     public function id()
     {
         return implode(",", $this->fieldNames());

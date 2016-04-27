@@ -22,11 +22,6 @@ class FormPresenter
         return $this->fieldset->render();
     }
 
-    public function __toString()
-    {
-        return $this->display();
-    }
-
     public function exclude(array $exclude)
     {
         $this->fieldset->exclude($exclude);

@@ -119,19 +119,6 @@ class FieldPresenterTest extends TestCase
         $this->assertEquals($expected, $field->render());
     }
 
-    public function testToString()
-    {
-        FieldPresenter::presenter($this->presenter);
-
-        $field = new FieldPresenter([
-            "name" => "name",
-            "label" => "Name",
-            "type" => "text",
-        ]);
-
-        $this->assertEquals('<label for="name">Name</label> <input id="name" placeholder="Name" name="name" type="text">', $field);
-    }
-
     public function testCheckboxChecked()
     {
         FieldPresenter::presenter($this->presenter);
