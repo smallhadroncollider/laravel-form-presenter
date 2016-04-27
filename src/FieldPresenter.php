@@ -99,7 +99,7 @@ class FieldPresenter implements Fieldlike
 
     public function flatFields(array $fields = [])
     {
-        $fields[$this->field->name()] = $this->field;
+        $fields[$this->field->name()] = $this;
         return $fields;
     }
 

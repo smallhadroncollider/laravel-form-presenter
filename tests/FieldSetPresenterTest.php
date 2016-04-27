@@ -124,12 +124,12 @@ class TestFieldSetPresenter extends FieldSetPresenter
     protected function fields()
     {
         return [
-            $this->field([
+            [
                 "type" => "text",
                 "name" => "name",
                 "label" => "Name",
                 "rules" => ["required"],
-            ]),
+            ],
         ];
     }
 }
@@ -139,12 +139,12 @@ class TestNestedFieldSetPresenter extends FieldSetPresenter
     protected function fields()
     {
         return [
-            $this->field([
+            [
                 "type" => "email",
                 "name" => "email",
                 "label" => "Email",
                 "rules" => ["required", "email"],
-            ]),
+            ],
             new TestFieldSetPresenter(),
         ];
     }
@@ -155,11 +155,11 @@ class TestViewFieldSetPresenter extends FieldSetPresenter
     protected function fields()
     {
         return [
-            $this->field([
+            [
                 "type" => "text",
                 "name" => "name",
                 "label" => "Name",
-            ]),
+            ],
         ];
     }
 
@@ -175,11 +175,11 @@ class TestModelFieldSetPresenter extends FieldSetPresenter
     {
         if ($this->model("name")) {
             return [
-                $this->field([
+                [
                     "type" => "text",
                     "name" => "name",
                     "label" => "Name",
-                ]),
+                ],
             ];
         }
 
@@ -207,11 +207,11 @@ class TestNoRulesFieldSetPresenter extends FieldSetPresenter
     protected function fields()
     {
         return [
-            $this->field([
+            [
                 "type" => "text",
                 "name" => "name",
                 "label" => "Name",
-            ]),
+            ],
         ];
     }
 }

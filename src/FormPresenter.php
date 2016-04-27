@@ -8,6 +8,7 @@ use Collective\Html\FormBuilder;
 class FormPresenter
 {
     private $fieldset;
+    private $fields;
     private $attr = [];
 
     public function __construct(FieldSetPresenter $fieldset)
@@ -61,5 +62,20 @@ class FormPresenter
     public function __call($name, $arguments)
     {
         return call_user_func_array([$this->formBuilder, $name], $arguments);
+    }
+
+    public function __get($name)
+    {
+        $fields = $this->getFields();
+        return array_key_exists($name, $fields) ? $fields[$name]->render() : "";
+    }
+
+    protected function getFields()
+    {
+        if (!$this->fields) {
+            $this->fields = $this->fieldset->flatFields();
+        }
+
+        return $this->fields;
     }
 }
