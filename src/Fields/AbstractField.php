@@ -3,6 +3,7 @@
 namespace SmallHadronCollider\LaravelFormPresenter\Fields;
 
 use Exception;
+use BadMethodCallException;
 use Collective\Html\FormBuilder;
 
 use Illuminate\Foundation\Testing\TestCase;
@@ -14,13 +15,14 @@ abstract class AbstractField
     protected $label;
     protected $type;
     protected $value;
+    protected $attr;
 
     protected $rules = [];
 
     public function __construct(array $attr)
     {
         $this->formBuilder = app()->make(FormBuilder::class);
-        $this->setup($attr);
+        $this->attr = $this->setup($attr);
     }
 
     public function setValue($value)
@@ -99,5 +101,14 @@ abstract class AbstractField
     {
         $attr["id"] = $this->name;
         return $attr;
+    }
+
+    public function __call($name, $arguments)
+    {
+        if (array_key_exists($name, $this->attr)) {
+            return $this->attr[$name];
+        }
+
+        return null;
     }
 }

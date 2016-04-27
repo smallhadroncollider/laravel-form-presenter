@@ -39,16 +39,6 @@ class FormPresenterTest extends TestCase
         );
     }
 
-    public function testToString()
-    {
-        $form = new FormPresenter(new TestFieldSet);
-
-        $this->assertEquals(
-            '<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text"><label for="email">Email</label><input id="email" placeholder="Email" name="email" type="email">',
-            $form
-        );
-    }
-
     public function testExclude()
     {
         $form = new FormPresenter(new TestFieldSet);

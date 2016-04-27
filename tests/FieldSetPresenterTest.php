@@ -22,12 +22,6 @@ class FieldSetPresenterTest extends TestCase
         $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text">', $fieldset->render());
     }
 
-    public function testToString()
-    {
-        $fieldset = new TestFieldSetPresenter();
-        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text">', $fieldset);
-    }
-
     public function testNested()
     {
         $fieldset = new TestNestedFieldSetPresenter();

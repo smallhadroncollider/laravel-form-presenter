@@ -70,11 +70,6 @@ class FieldPresenter implements Fieldlike
         return $this->field->type() == "file";
     }
 
-    public function __toString()
-    {
-        return $this->render();
-    }
-
     public function id()
     {
         return $this->field->name();
