@@ -317,7 +317,6 @@ class AddPersonTest extends TestCase
 - Better documentation (nested fieldset)
 - Add some example files
 - Multiple fieldsets per form
-- `$form->field_name` output
 - Custom fieldset rendering
 
 

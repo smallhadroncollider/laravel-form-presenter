@@ -71,6 +71,13 @@ class FormPresenterTest extends TestCase
         $this->assertEquals(["name", "email"], $form->fieldNames());
     }
 
+    public function testFieldRendering()
+    {
+        $form = new FormPresenter(new TestFieldSet);
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" name="name" type="text">', $form->name);
+        $this->assertEquals('', $form->invalid);
+    }
+
     public function testPassthrough()
     {
         $form = new FormPresenter(new TestFieldSet);
