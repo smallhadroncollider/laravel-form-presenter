@@ -63,7 +63,7 @@ abstract class FieldSetPresenter implements Fieldlike
         return implode(",", $this->fieldNames());
     }
 
-    public function field(array $attrs)
+    protected function field(array $attrs)
     {
         return new FieldPresenter($attrs);
     }
@@ -103,7 +103,7 @@ abstract class FieldSetPresenter implements Fieldlike
     protected function getFields()
     {
         if (!$this->fields) {
-            $this->fields = $this->fields();
+            $this->fields = $this->transform($this->fields());
         }
 
         return $this->fields;
@@ -158,6 +158,13 @@ abstract class FieldSetPresenter implements Fieldlike
         }
 
         return $results;
+    }
+
+    protected function transform(array $fields)
+    {
+        return array_map(function ($field) {
+            return is_array($field) ? $this->field($field) : $field;
+        }, $fields);
     }
 
     abstract protected function fields();

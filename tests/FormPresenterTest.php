@@ -99,16 +99,16 @@ class TestFieldSet extends FieldSetPresenter
     protected function fields()
     {
         return [
-            $this->field([
+            [
                 "type" => "text",
                 "name" => "name",
                 "label" => "Name",
-            ]),
-            $this->field([
+            ],
+            [
                 "type" => "email",
                 "name" => "email",
                 "label" => "Email",
-            ]),
+            ],
         ];
     }
 }
@@ -118,11 +118,11 @@ class TestFileFieldSet extends FieldSetPresenter
     protected function fields()
     {
         return [
-            $this->field([
+            [
                 "type" => "file",
                 "name" => "avatar",
                 "label" => "Avatar",
-            ]),
+            ],
         ];
     }
 }
