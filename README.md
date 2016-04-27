@@ -187,6 +187,58 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
+### Custom Field Properties
+
+```php
+<?php
+
+// app/Http/Presenters/PersonFieldSet.php
+
+namespace App\Http\Presenters;
+
+use SmallHadronCollider\LaravelFormPresenter\FieldSetPresenter;
+
+class PersonFieldSet extends FieldSetPresenter
+{
+    protected function fields()
+    {
+        return [
+            [
+                "name" => "first_name",
+                "type" => "text",
+                "label" => "First Name",
+
+                // Custom field property
+                "message" => "Enter you first name"
+            ],
+        ];
+    }
+}
+```
+
+Reserved property names: `name`, `type`, `label`, `value`, `rules`, `items`
+
+Using a custom field renderer as above:
+
+```php
+{{-- forms/field.blade.php --}}
+
+<div class="form__group {{ $errors->has($field->name()) ? "form__group--error" : "" }}">
+    {!! $field->label(["class" => "form__label"]) !!}
+
+    @if ($errors->has($field->name()))
+        <span class="form__info">{{ $errors->first($field->name()) }}</span>
+    @endif
+
+    {{-- use custom message field - will return null if no value set --}}
+    <p class="form__message">{!! $field->message() !!}</p>
+
+    {!! $field->display(["class" => "form__control form__control--grouped form__control--{$field->type()}"]) !!}
+</div>
+```
+
+
+
 ### Bootstrap Field Rendering
 
 You can use the built-in Bootstrap template:
