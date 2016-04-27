@@ -119,6 +119,30 @@ class FieldPresenterTest extends TestCase
         $this->assertEquals($expected, $field->render());
     }
 
+    public function testCustomAttribute()
+    {
+        FieldPresenter::presenter(function ($attrs) {
+            return "{$attrs["field"]->label()} {$attrs["field"]->info()} {$attrs["field"]->display()}";
+        });
+
+        $field = new FieldPresenter([
+            "name" => "name",
+            "label" => "Name",
+            "type" => "text",
+            "info" => "Some info",
+        ]);
+
+        $this->assertEquals('<label for="name">Name</label> Some info <input id="name" placeholder="Name" name="name" type="text">', $field->render());
+
+        $field = new FieldPresenter([
+            "name" => "name",
+            "label" => "Name",
+            "type" => "text",
+        ]);
+
+        $this->assertEquals('<label for="name">Name</label>  <input id="name" placeholder="Name" name="name" type="text">', $field->render());
+    }
+
     public function testCheckboxChecked()
     {
         FieldPresenter::presenter($this->presenter);
