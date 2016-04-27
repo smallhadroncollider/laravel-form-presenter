@@ -28,31 +28,28 @@ class PersonFieldSet extends FieldSetPresenter
     protected function fields()
     {
         return [
-            $this->field([
+            [
                 "name" => "first_name",
                 "type" => "text",
                 "label" => "First Name",
-            ]),
-
-            $this->field([
+            ],
+            [
                 "name" => "last_name",
                 "type" => "text",
                 "label" => "Last Name",
                 "rules" => ["required"],
-            ]),
-
-            $this->field([
+            ],
+            [
                 "name" => "age",
                 "type" => "number",
                 "label" => "Age",
                 "rules" => ["required"],
-            ]),
-
-            $this->field([
+            ],
+            [
                 "name" => "notes",
                 "type" => "textarea",
                 "label" => "Notes",
-            ]),
+            ],
         ];
     }
 }
@@ -136,6 +133,19 @@ You can then use a single `form.blade.php` file to render all your forms:
     {!! $form->submit($title, ["class" => "button button--blue"]) !!}
 {!! $form->close() !!}
 ```
+
+Or, if you want more flexibility, you can render individual fields in fieldset specific templates:
+
+```php
+{{-- person-form.blade.php --}}
+
+{!! $form->open(["class" => "form"]) !!}
+    {!! $form->first_name !!}
+    {!! $form->last_name !!}
+    {!! $form->submit($title, ["class" => "button button--blue"]) !!}
+{!! $form->close() !!}
+```
+
 
 ### Custom Field Rendering
 
