@@ -8,6 +8,9 @@ use Exception;
 use Collective\Html\FormBuilder;
 use SmallHadronCollider\LaravelFormPresenter\Fields;
 
+use Illuminate\Foundation\Testing\TestCase;
+use Faker\Generator;
+
 class FieldPresenter implements Fieldlike
 {
     /**
@@ -73,6 +76,11 @@ class FieldPresenter implements Fieldlike
     public function id()
     {
         return $this->field->name();
+    }
+
+    public function test(TestCase $test, Generator $faker)
+    {
+        return $this->field->test($test, $faker);
     }
 
     public function rules(array $rules = [])
