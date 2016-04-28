@@ -4,6 +4,8 @@ A Laravel package for easily generating and manipulating forms.
 
 Dealing with forms in plain HTML leads to a horrible mess. Using the [Laravel Collective HTML & Forms](https://laravelcollective.com/docs/5.2/html) package makes things neater, but the logic for your form is still all over the place. Using Laravel Form Presenter you can define your form in one place and display it using a reusable `form` template.
 
+---
+
 ## Features
 
 - Easy to add your own field types
@@ -12,9 +14,38 @@ Dealing with forms in plain HTML leads to a horrible mess. Using the [Laravel Co
 - (Almost) Automatic integration testing
 - Automatically detects `file` field types and adds the necessary form attributes
 
-## Example
+---
+
+## Installation
 
 Add `SmallHadronCollider\LaravelFormPresenter\Providers\FormPresenterServiceProvider::class` to your service providers in `config/app.php`.
+
+### Using With Analogue
+
+If you're using [Analogue ORM](https://github.com/analogueorm/analogue) you'll need to use a different Model Presenter (Model Presenters tell the package how to set field values from a model):
+
+```php
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+use SmallHadronCollider\LaravelFormPresenter\ModelPresenterInterface;
+use SmallHadronCollider\LaravelFormPresenter\ModelPresenters\AnalogueModelPresenter;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        $this->app->bind(ModelPresenterInterface::class, AnalogueModelPresenter::class);
+    }
+}
+```
+
+---
+
+## Example
 
 ```php
 <?php
@@ -148,32 +179,7 @@ Or, if you want more flexibility, you can render individual fields in fieldset s
 {!! $form->close() !!}
 ```
 
-### Using With Analogue
-
-If you're using [Analogue ORM](https://github.com/analogueorm/analogue) you'll need to use a different Model Presenter (Model Presenters tell the package how to set field values from a model):
-
-```php
-<?php
-
-// app/Providers/AppServiceProvider.php
-
-namespace App\Providers;
-
-use Illuminate\Support\ServiceProvider;
-
-use SmallHadronCollider\LaravelFormPresenter\ModelPresenterInterface;
-use SmallHadronCollider\LaravelFormPresenter\ModelPresenters\AnalogueModelPresenter;
-
-class AppServiceProvider extends ServiceProvider
-{
-    public function register()
-    {
-        $this->app->bind(ModelPresenterInterface::class, AnalogueModelPresenter::class);
-    }
-}
-```
-
-
+## Usage
 
 ### Custom Field Rendering
 
@@ -264,8 +270,6 @@ Using a custom field renderer as above:
     {!! $field->display(["class" => "form__control form__control--grouped form__control--{$field->type()}"]) !!}
 </div>
 ```
-
-
 
 ### Bootstrap Field Rendering
 
@@ -370,7 +374,7 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-## Integration Testing
+### Integration Testing
 
 You can setup integration tests for any fieldset automatically:
 
@@ -402,6 +406,8 @@ class AddPersonTest extends TestCase
 }
 ```
 
+---
+
 ## To Do
 
 - Better documentation (nested fieldset)
@@ -409,6 +415,7 @@ class AddPersonTest extends TestCase
 - Multiple fieldsets per form
 - Custom fieldset rendering
 
+---
 
 ## License
 
