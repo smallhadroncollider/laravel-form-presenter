@@ -31,6 +31,7 @@ class FieldPresenter implements Fieldlike
         "file" => Fields\Field::class,
         "textarea" => Fields\TextArea::class,
         "select" => Fields\Select::class,
+        "multi-select" => Fields\MultiSelect::class,
     ];
 
     public static function presenter(Closure $presenterResolver = null)
