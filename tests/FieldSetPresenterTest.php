@@ -3,7 +3,6 @@
 use SmallHadronCollider\LaravelFormPresenter\FormPresenter;
 use SmallHadronCollider\LaravelFormPresenter\FieldPresenter;
 use SmallHadronCollider\LaravelFormPresenter\FieldSetPresenter;
-use SmallHadronCollider\LaravelFormPresenter\ModelPresenterInterface;
 use SmallHadronCollider\LaravelFormPresenter\Fields\AbstractField;
 use SmallHadronCollider\LaravelFormPresenter\PubliciseFormMethods;
 
@@ -58,19 +57,26 @@ class FieldSetPresenterTest extends TestCase
 
     public function testSetModel()
     {
-        $this->app->bind(ModelPresenterInterface::class, TestModelPresenter::class);
-
         $fieldset = new TestFieldSetPresenter();
         $fieldset->setModel(new TestModel());
+
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text" value="Test">', $fieldset->render());
+
+        $fieldset->setModel((object) []);
+        $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text">', $fieldset->render());
+    }
+
+    public function testSetMagicModel()
+    {
+        $fieldset = new TestFieldSetPresenter();
+        $fieldset->setModel(new TestMagicModel());
 
         $this->assertEquals('<label for="name">Name</label><input id="name" placeholder="Name" required="true" name="name" type="text" value="Test">', $fieldset->render());
     }
 
     public function testDynamicField()
     {
-        $this->app->bind(ModelPresenterInterface::class, TestModelPresenter::class);
-
-        // Field shouldn't render as it's determined by model
+        // Field shouldn't render - it's determined by model
         $fieldset = new TestModelFieldSetPresenter();
         $this->assertEquals('', $fieldset->render());
 
@@ -207,16 +213,15 @@ class TestModelFieldSetPresenter extends FieldSetPresenter
 
 class TestModel
 {
-    public $attrs = [
-        "name" => "Test",
-    ];
+    public $name = "Test";
 }
 
-class TestModelPresenter implements ModelPresenterInterface
+
+class TestMagicModel
 {
-    public function present($model)
+    public function __get($name)
     {
-        return $model->attrs;
+        return "Test";
     }
 }
 

@@ -9,6 +9,12 @@ class Select extends AbstractField implements FieldInterface
 {
     protected $items = [];
 
+    public function setValue($value)
+    {
+        $this->value = is_object($value) ? $value->id : $value;
+        return $this;
+    }
+
     public function label($attrs = [])
     {
         return $this->formBuilder->label($this->name, $this->label, $attrs);

@@ -9,7 +9,7 @@ abstract class FieldSetPresenter implements Fieldlike
 {
     protected $exclude = [];
     protected $only = [];
-    protected $model = [];
+    protected $model;
     protected $fields;
 
     public function form()
@@ -17,29 +17,16 @@ abstract class FieldSetPresenter implements Fieldlike
         return new FormPresenter($this);
     }
 
-    /**
-     * Turns model into an array structure and then stores it
-     */
     public function setModel($model)
     {
-        $presenter = app()->make(ModelPresenterInterface::class);
-        $this->model = $presenter->present($model);
-        return $this;
-    }
-
-    /**
-     * If model is already in array form (i.e. when fieldset is nested)
-     */
-    public function setData(array $data)
-    {
-        $this->model = $data;
+        $this->model = $model ;
         return $this;
     }
 
     public function render()
     {
         $content = array_reduce($this->getFields(), function ($html, Fieldlike $field) {
-            $field->setData($this->model);
+            $field->setModel($this->model);
             return $this->shouldRenderField($field) ? $html . $field->render() : $html;
         }, "");
 
@@ -124,9 +111,18 @@ abstract class FieldSetPresenter implements Fieldlike
         return $test;
     }
 
-    protected function model($attr)
+    protected function model($property)
     {
-        return array_key_exists($attr, $this->model) ? $this->model[$attr] : null;
+        if (!is_object($this->model)) {
+            return null;
+        }
+
+        // Can't use isset/property_exists as it may not work on __get() properties
+        try {
+            return $this->model->{$property};
+        } catch (Exception $e) {}
+
+        return null;
     }
 
     protected function shouldRenderField(Fieldlike $field)
