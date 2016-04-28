@@ -3,7 +3,7 @@
 namespace SmallHadronCollider\LaravelFormPresenter\ModelPresenters;
 
 use Illuminate\Support\Collection;
-use Analogue\System\CollectionProxy;
+use Analogue\ORM\System\Proxies\CollectionProxy;
 use SmallHadronCollider\LaravelFormPresenter\ModelPresenterInterface;
 
 class AnalogueModelPresenter implements ModelPresenterInterface
