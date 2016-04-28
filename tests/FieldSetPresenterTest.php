@@ -5,6 +5,7 @@ use SmallHadronCollider\LaravelFormPresenter\FieldPresenter;
 use SmallHadronCollider\LaravelFormPresenter\FieldSetPresenter;
 use SmallHadronCollider\LaravelFormPresenter\ModelPresenterInterface;
 use SmallHadronCollider\LaravelFormPresenter\Fields\AbstractField;
+use SmallHadronCollider\LaravelFormPresenter\PubliciseFormMethods;
 
 class FieldSetPresenterTest extends TestCase
 {
@@ -110,6 +111,29 @@ class FieldSetPresenterTest extends TestCase
         // Test with no rules
         $fieldset = new TestNoRulesFieldSetPresenter();
         $this->assertEquals([], $fieldset->rules());
+    }
+
+    public function testTest()
+    {
+        $fieldset = new TestFieldSetPresenter();
+        $test = new PublicisedTestCase();
+
+        $fieldset->populateTest($test);
+
+        $this->assertRegExp("/^[A-Z][a-z]+$/", $test->arguments[0]);
+        $this->assertEquals("name", $test->arguments[1]);
+    }
+}
+
+class PublicisedTestCase extends TestCase
+{
+    public $arguments;
+
+    public function __call($name, $arguments)
+    {
+        if ($name === "type") {
+            $this->arguments = $arguments;
+        }
     }
 }
 
