@@ -14,6 +14,8 @@ Dealing with forms in plain HTML leads to a horrible mess. Using the [Laravel Co
 
 ## Example
 
+Add `SmallHadronCollider\LaravelFormPresenter\Providers\FormPresenterServiceProvider::class` to your service providers in `config/app.php`.
+
 ```php
 <?php
 
@@ -145,6 +147,32 @@ Or, if you want more flexibility, you can render individual fields in fieldset s
     {!! $form->submit($title, ["class" => "button button--blue"]) !!}
 {!! $form->close() !!}
 ```
+
+### Using With Analogue
+
+If you're using [Analogue ORM](https://github.com/analogueorm/analogue) you'll need to use a different Model Presenter (Model Presenters tell the package how to set field values from a model):
+
+```php
+<?php
+
+// app/Providers/AppServiceProvider.php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+use SmallHadronCollider\LaravelFormPresenter\ModelPresenterInterface;
+use SmallHadronCollider\LaravelFormPresenter\ModelPresenters\AnalogueModelPresenter;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        $this->app->bind(ModelPresenterInterface::class, AnalogueModelPresenter::class);
+    }
+}
+```
+
 
 
 ### Custom Field Rendering
