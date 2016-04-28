@@ -154,11 +154,34 @@ class FieldPresenterTest extends TestCase
             "value" => "1",
         ]);
 
-        $field->setData(["check" => 0]);
+        $field->setModel((object) ["check" => 0]);
         $this->assertEquals('<label for="check">Check</label> <input name="check" type="checkbox" value="1" id="check">', $field->render());
 
-        $field->setData(["check" => 1]);
+        $field->setModel((object) ["check" => 1]);
         $this->assertEquals('<label for="check">Check</label> <input checked="checked" name="check" type="checkbox" value="1" id="check">', $field->render());
+    }
+
+    public function testSelectSetModel()
+    {
+        FieldPresenter::presenter($this->presenter);
+
+        $field = new FieldPresenter([
+            "type" => "select",
+            "name" => "select",
+            "label" => "Select",
+            "items" => [
+                "1" => "one",
+                "2" => "two",
+            ]
+        ]);
+
+        // should convert an object to its id
+        $field->setModel((object) ["select" => (object) ["id" => 1, "name" => "one"]]);
+        $this->assertEquals('<label for="select">Select</label> <select id="select" name="select"><option value="1" selected="selected">one</option><option value="2">two</option></select>', $field->render());
+
+        // should treat a non object as an id
+        $field->setModel((object) ["select" => 2]);
+        $this->assertEquals('<label for="select">Select</label> <select id="select" name="select"><option value="1">one</option><option value="2" selected="selected">two</option></select>', $field->render());
     }
 
     public function testAttributes()

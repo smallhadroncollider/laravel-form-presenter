@@ -106,12 +106,19 @@ class FieldPresenter implements Fieldlike
         return $fields;
     }
 
-    public function setData(array $data)
+    public function setModel($model)
     {
-        $id = $this->id();
+        if (!is_object($model)) {
+            return $this;
+        }
 
-        if (array_key_exists($id, $data)) {
-            $this->field->setValue($data[$id]);
+        $property = $this->id();
+
+        // Can't use isset/property_exists as it may not work on __get() properties
+        try {
+            $this->field->setValue($model->{$property});
+        } catch (Exception $e) {
+            $this->field->setValue(null);
         }
 
         return $this;

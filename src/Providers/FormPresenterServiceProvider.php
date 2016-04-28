@@ -9,9 +9,6 @@ use Collective\Html\HtmlBuilder;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Contracts\Routing\UrlGenerator;
 
-use SmallHadronCollider\LaravelFormPresenter\ModelPresenterInterface;
-use SmallHadronCollider\LaravelFormPresenter\ModelPresenters\EloquentModelPresenter;
-
 class FormPresenterServiceProvider extends ServiceProvider
 {
     public function boot()
@@ -29,7 +26,5 @@ class FormPresenterServiceProvider extends ServiceProvider
                 csrf_token()
             );
         });
-
-        $this->app->bind(ModelPresenterInterface::class, EloquentModelPresenter::class);
     }
 }

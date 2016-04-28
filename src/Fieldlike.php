@@ -9,6 +9,6 @@ interface Fieldlike
     public function fieldNames(array $fieldNames = []);
     public function rules(array $rules = []);
     public function flatFields(array $fields = []);
-    public function setData(array $data);
+    public function setModel($model);
     public function hasFiles();
 }
