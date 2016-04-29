@@ -268,7 +268,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         FieldPresenter::presenter(function ($attrs) {
-            return view("smallhadroncollider/laravel-form-presenter::bootstrap", $attrs);
+            return view("form-presenter::bootstrap", $attrs);
         });
     }
 }
