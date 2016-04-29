@@ -11,6 +11,11 @@ class FormBuilderProvider
 {
     private static $formBuilder;
 
+    public static function clear()
+    {
+        static::$formBuilder = null;
+    }
+
     private function generate()
     {
         return new FormBuilder(

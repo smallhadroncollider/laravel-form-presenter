@@ -3,6 +3,7 @@
 use SmallHadronCollider\LaravelFormPresenter\FieldPresenter;
 use SmallHadronCollider\LaravelFormPresenter\FieldSetPresenter;
 use SmallHadronCollider\LaravelFormPresenter\FormPresenter;
+use SmallHadronCollider\LaravelFormPresenter\FormBuilderProvider;
 
 use Collective\Html\FormBuilder;
 use Collective\Html\HtmlBuilder;
@@ -15,16 +16,10 @@ class FormPresenterTest extends TestCase
     {
         parent::setup();
 
-        $this->app["request"]->setSession($this->app["session"]->driver("array"));
+        FormBuilderProvider::clear();
 
-        $this->app->singleton(FormBuilder::class, function ($app) {
-            return new FormBuilder(
-                $app->make(HtmlBuilder::class),
-                $app->make(UrlGenerator::class),
-                $app->make(ViewFactory::class),
-                "csrf-test"
-            );
-        });
+        Session::start();
+        $this->app["request"]->setSession(Session::driver());
 
         FieldPresenter::presenter(null);
     }
@@ -79,15 +74,17 @@ class FormPresenterTest extends TestCase
     public function testOpen()
     {
         $form = new FormPresenter(new TestFieldSet);
+        $token = Session::token();
 
-        $this->assertEquals('<form method="POST" action="http://localhost" accept-charset="UTF-8"><input name="_token" type="hidden" value="csrf-test">', $form->open()->toHtml());
+        $this->assertEquals('<form method="POST" action="http://localhost" accept-charset="UTF-8"><input name="_token" type="hidden" value="' . $token . '">', $form->open()->toHtml());
     }
 
     public function testOpenWithFiles()
     {
         $form = new FormPresenter(new TestFileFieldSet);
+        $token = Session::token();
 
-        $this->assertEquals('<form method="POST" action="http://localhost" accept-charset="UTF-8" enctype="multipart/form-data"><input name="_token" type="hidden" value="csrf-test">', $form->open()->toHtml());
+        $this->assertEquals('<form method="POST" action="http://localhost" accept-charset="UTF-8" enctype="multipart/form-data"><input name="_token" type="hidden" value="' . $token . '">', $form->open()->toHtml());
     }
 }
 
