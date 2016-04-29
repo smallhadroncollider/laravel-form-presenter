@@ -2,9 +2,6 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter;
 
-use Closure;
-use Collective\Html\FormBuilder;
-
 class FormPresenter
 {
     private $fieldset;
@@ -14,7 +11,7 @@ class FormPresenter
     public function __construct(FieldSetPresenter $fieldset)
     {
         $this->fieldset = $fieldset;
-        $this->formBuilder = app()->make(FormBuilder::class);
+        $this->formBuilder = new FormBuilderProvider();
     }
 
     public function display()
