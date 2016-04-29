@@ -11,7 +11,8 @@ class FieldPresenterTest extends TestCase
     {
         parent::setup();
 
-        $this->app["request"]->setSession($this->app["session"]->driver("array"));
+        Session::start();
+        $this->app["request"]->setSession(Session::driver());
 
         $this->presenter = function ($attrs) {
             return "{$attrs["field"]->label()} {$attrs["field"]->display()}";

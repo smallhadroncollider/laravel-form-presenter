@@ -12,7 +12,8 @@ class FieldSetPresenterTest extends TestCase
     {
         parent::setup();
 
-        $this->app["request"]->setSession($this->app["session"]->driver("array"));
+        Session::start();
+        $this->app["request"]->setSession(Session::driver());
         FieldPresenter::presenter(null);
     }
 
