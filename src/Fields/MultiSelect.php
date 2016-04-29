@@ -2,16 +2,26 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter\Fields;
 
-use Illuminate\Support\Collection;
 use Illuminate\Foundation\Testing\TestCase;
 use Faker\Generator;
 
 class MultiSelect extends Select implements FieldInterface
 {
+    protected $collectionClasses = [
+        "Illuminate\Support\Collection",
+        "Analogue\ORM\System\Proxies\CollectionProxy",
+    ];
+
+    protected function isCollection($value)
+    {
+        return array_reduce($this->collectionClasses, function ($collection, $class) use ($value) {
+            return $collection || $value instanceof $class;
+        }, false);
+    }
+
     public function setValue($value)
     {
-        $collection = $value instanceof Collection;
-        $this->value = $collection ? $value->pluck("id")->unique()->all() : $value;
+        $this->value = $this->isCollection($value) ? $value->pluck("id")->unique()->all() : $value;
         return $this;
     }
 
