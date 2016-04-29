@@ -4,7 +4,7 @@ namespace SmallHadronCollider\LaravelFormPresenter\Fields;
 
 use Exception;
 use BadMethodCallException;
-use Collective\Html\FormBuilder;
+use SmallHadronCollider\LaravelFormPresenter\FormBuilderProvider;
 
 use Illuminate\Foundation\Testing\TestCase;
 use Faker\Generator;
@@ -21,7 +21,7 @@ abstract class AbstractField
 
     public function __construct(array $attr)
     {
-        $this->formBuilder = app()->make(FormBuilder::class);
+        $this->formBuilder = new FormBuilderProvider();
         $this->attr = $this->setup($attr);
     }
 

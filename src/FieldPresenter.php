@@ -6,11 +6,6 @@ use ReflectionClass;
 use Closure;
 use Exception;
 
-use Collective\Html\FormBuilder;
-use Collective\Html\HtmlBuilder;
-use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\Contracts\Routing\UrlGenerator;
-
 use SmallHadronCollider\LaravelFormPresenter\Fields;
 
 use Illuminate\Foundation\Testing\TestCase;
@@ -57,18 +52,10 @@ class FieldPresenter implements Fieldlike
      * Instance Methods
      **/
     private $field;
-    private $formBuilder;
 
     public function __construct(array $attr)
     {
         $this->field = $this->getField($attr);
-
-        $this->formBuilder =  new FormBuilder(
-            app()->make(HtmlBuilder::class),
-            app()->make(UrlGenerator::class),
-            app()->make(ViewFactory::class),
-            csrf_token()
-        );
     }
 
     public function render()
