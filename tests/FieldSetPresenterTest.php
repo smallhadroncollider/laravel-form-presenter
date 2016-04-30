@@ -130,6 +130,18 @@ class FieldSetPresenterTest extends TestCase
         $this->assertRegExp("/^[A-Z][a-z]+$/", $test->arguments[0]);
         $this->assertEquals("name", $test->arguments[1]);
     }
+
+    public function testMultiField()
+    {
+        $fieldset = new TestMultiFieldSetPresenter();
+        $this->assertEquals('<label for="people[0][email]">Email</label><input id="people[0][email]" placeholder="Email" required="true" name="people[0][email]" type="email"><label for="people[0][name]">Name</label><input id="people[0][name]" placeholder="Name" required="true" name="people[0][name]" type="text">', $fieldset->render());
+
+        $fieldset = new TestMultiFieldSetPresenter();
+        $this->assertEquals('<label for="people[1][email]">Email</label><input id="people[1][email]" placeholder="Email" required="true" name="people[1][email]" type="email"><label for="people[1][name]">Name</label><input id="people[1][name]" placeholder="Name" required="true" name="people[1][name]" type="text">', $fieldset->render());
+
+        $fieldset = new TestMultiFieldSetPresenter();
+        $this->assertEquals('<label for="people[2][email]">Email</label><input id="people[2][email]" placeholder="Email" required="true" name="people[2][email]" type="email"><label for="people[2][name]">Name</label><input id="people[2][name]" placeholder="Name" required="true" name="people[2][name]" type="text">', $fieldset->render());
+    }
 }
 
 class PublicisedTestCase extends TestCase
@@ -209,6 +221,27 @@ class TestModelFieldSetPresenter extends FieldSetPresenter
         }
 
         return [];
+    }
+}
+
+class TestMultiFieldSetPresenter extends FieldSetPresenter
+{
+    protected function fields()
+    {
+        return [
+            $this->multifield("people", [
+                "type" => "email",
+                "name" => "email",
+                "label" => "Email",
+                "rules" => ["required"],
+            ]),
+            $this->multifield("people", [
+                "type" => "text",
+                "name" => "name",
+                "label" => "Name",
+                "rules" => ["required"],
+            ]),
+        ];
     }
 }
 

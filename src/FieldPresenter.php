@@ -16,9 +16,9 @@ class FieldPresenter implements Fieldlike
     /**
      * Static Methods
      **/
-    private static $presenterResolver;
+    protected static $presenterResolver;
 
-    private static $types = [
+    protected static $types = [
         "text" => Fields\Field::class,
         "checkbox" => Fields\Checked::class,
         "radio" => Fields\Checked::class,
@@ -51,10 +51,22 @@ class FieldPresenter implements Fieldlike
     /**
      * Instance Methods
      **/
-    private $field;
+    protected $field;
+    protected $name;
 
-    public function __construct(array $attr)
+    public function __construct(array $attr, $parent = null, $id = 0)
     {
+        $this->name = array_get($attr, "name");
+
+        if ($attr["type"] == "fish") {
+            dd($attr);
+        }
+
+        if ($parent) {
+            $attr["name"] = "{$parent}[{$id}][{$attr["name"]}]";
+        }
+
+        // Update to user array type naming
         $this->field = $this->getField($attr);
     }
 
@@ -74,7 +86,7 @@ class FieldPresenter implements Fieldlike
 
     public function id()
     {
-        return $this->field->name();
+        return $this->name;
     }
 
     public function test(TestCase $test, Generator $faker)
@@ -87,7 +99,7 @@ class FieldPresenter implements Fieldlike
         $fieldRules = $this->field->rules();
 
         if ($fieldRules) {
-            $rules[$this->field->name()] = $fieldRules;
+            $rules[$this->id()] = $fieldRules;
         }
 
         return $rules;
@@ -101,7 +113,7 @@ class FieldPresenter implements Fieldlike
 
     public function flatFields(array $fields = [])
     {
-        $fields[$this->field->name()] = $this;
+        $fields[$this->id()] = $this;
         return $fields;
     }
 
@@ -123,7 +135,7 @@ class FieldPresenter implements Fieldlike
         return $this;
     }
 
-    private function getPresenterResolver()
+    protected function getPresenterResolver()
     {
         if (self::$presenterResolver) {
             return self::$presenterResolver;
@@ -134,7 +146,7 @@ class FieldPresenter implements Fieldlike
         };
     }
 
-    private function getField(array $attr)
+    protected function getField(array $attr)
     {
         $type = array_get($attr, "type");
 

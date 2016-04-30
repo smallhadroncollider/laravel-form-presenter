@@ -7,6 +7,8 @@ use Illuminate\Foundation\Testing\TestCase;
 
 abstract class FieldSetPresenter implements Fieldlike
 {
+    static protected $indexes = [];
+
     protected $exclude = [];
     protected $only = [];
     protected $model;
@@ -48,6 +50,11 @@ abstract class FieldSetPresenter implements Fieldlike
     protected function field(array $attrs)
     {
         return new FieldPresenter($attrs);
+    }
+
+    protected function multifield($parent, array $attrs)
+    {
+        return new FieldPresenter($attrs, $parent, $this->getIndex($parent));
     }
 
     public function exclude(array $exclude)
@@ -156,6 +163,23 @@ abstract class FieldSetPresenter implements Fieldlike
         return array_map(function ($field) {
             return is_array($field) ? $this->field($field) : $field;
         }, $fields);
+    }
+
+    protected function getIndex($parent)
+    {
+        if (!array_key_exists($parent, static::$indexes)) {
+            static::$indexes[$parent] = [
+                "index" => 0,
+                "previous" => $this,
+            ];
+        }
+
+        if (static::$indexes[$parent]["previous"] !== $this) {
+            static::$indexes[$parent]["index"]++;
+            static::$indexes[$parent]["previous"] = $this;
+        }
+
+        return static::$indexes[$parent]["index"];
     }
 
     abstract protected function fields();
