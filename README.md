@@ -387,10 +387,11 @@ class AddPersonTest extends TestCase
 
 ## To Do
 
-- Better documentation (nested fieldset)
+- Better documentation (nested fieldset, multifields)
 - Add some example files
 - Multiple fieldsets per form
 - Custom fieldset rendering
+- One dimensional multifields (e.g. name[0], name[1], name[2])
 
 ---
 
