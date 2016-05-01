@@ -86,7 +86,7 @@ class FieldPresenter implements Fieldlike
 
     public function id()
     {
-        return $this->name;
+        return $this->field->name();
     }
 
     public function test(TestCase $test, Generator $faker)
@@ -123,7 +123,7 @@ class FieldPresenter implements Fieldlike
             return $this;
         }
 
-        $property = $this->id();
+        $property = $this->name;
 
         // Can't use isset/property_exists as it may not work on __get() properties
         try {
