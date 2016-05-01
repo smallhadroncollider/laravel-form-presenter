@@ -140,6 +140,28 @@ class FieldSetPresenterTest extends TestCase
             $this->assertEquals('<label for="people[' . $i . '][email]">Email</label><input id="people[' . $i . '][email]" placeholder="Email" required="true" name="people[' . $i . '][email]" type="email"><label for="people[' . $i . '][name]">Name</label><input id="people[' . $i . '][name]" placeholder="Name" required="true" name="people[' . $i . '][name]" type="text">', $fieldset->render());
         }
     }
+
+    public function testMultiFieldSetModel()
+    {
+        $this->markTestSkipped();
+
+        $model = (object) [
+            "people" => new Collection([
+                (object) ["email" => "one@test.com", "name" => "One"],
+                (object) ["email" => "two@test.com", "name" => "Two"],
+                (object) ["email" => "three@test.com", "name" => "Three"],
+            ]),
+        ];
+
+        TestMultiFieldSetPresenter::clearIndexes();
+
+        $fieldset = new TestMultiFieldSetPresenter();
+        $fieldset->setModel($model);
+
+        $this->assertCount(6, $fieldset->flatFields());
+
+        $this->assertEquals('<label for="people[0][email]">Email</label><input id="people[0][email]" placeholder="Email" required="true" name="people[0][email]" type="email" value="one@test.com"><label for="people[0][name]">Name</label><input id="people[0][name]" placeholder="Name" required="true" name="people[0][name]" type="text" value="One"><label for="people[1][email]">Email</label><input id="people[1][email]" placeholder="Email" required="true" name="people[1][email]" type="email" value="two@test.com"><label for="people[1][name]">Name</label><input id="people[1][name]" placeholder="Name" required="true" name="people[1][name]" type="text" value="Two"><label for="people[2][email]">Email</label><input id="people[2][email]" placeholder="Email" required="true" name="people[2][email]" type="email" value="three@test.com"><label for="people[2][name]">Name</label><input id="people[2][name]" placeholder="Name" required="true" name="people[2][name]" type="text" value="Three">', $fieldset->render());
+    }
 }
 
 class PublicisedTestCase extends TestCase

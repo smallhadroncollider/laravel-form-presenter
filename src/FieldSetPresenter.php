@@ -9,6 +9,13 @@ abstract class FieldSetPresenter implements Fieldlike
 {
     static protected $indexes = [];
 
+    // Resets multi-field indexes
+    // Useful for testing
+    static public function clearIndexes()
+    {
+        static::$indexes = [];
+    }
+
     protected $exclude = [];
     protected $only = [];
     protected $model;
