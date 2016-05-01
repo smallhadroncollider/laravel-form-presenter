@@ -161,7 +161,15 @@ abstract class FieldSetPresenter implements Fieldlike
     protected function transform(array $fields)
     {
         return array_map(function ($field) {
-            return is_array($field) ? $this->field($field) : $field;
+            if (!is_array($field)) {
+                return $field;
+            }
+
+            if (array_key_exists("parent", $field)) {
+                return $this->multifield($field["parent"], $field);
+            }
+
+            return $this->field($field);
         }, $fields);
     }
 
