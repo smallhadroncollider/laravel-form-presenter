@@ -9,16 +9,11 @@ use Illuminate\Contracts\Routing\UrlGenerator;
 
 class FormBuilderProvider
 {
-    private static $formBuilder;
+    private $formBuilder;
 
-    public static function clear()
+    public function __construct()
     {
-        static::$formBuilder = null;
-    }
-
-    private function generate()
-    {
-        return new FormBuilder(
+        $this->formBuilder = new FormBuilder(
             app()->make(HtmlBuilder::class),
             app()->make(UrlGenerator::class),
             app()->make(ViewFactory::class),
@@ -26,15 +21,8 @@ class FormBuilderProvider
         );
     }
 
-    public function __construct()
-    {
-        if (!static::$formBuilder) {
-            static::$formBuilder = $this->generate();
-        }
-    }
-
     public function __call($name, $arguments)
     {
-        return call_user_func_array([static::$formBuilder, $name], $arguments);
+        return call_user_func_array([$this->formBuilder, $name], $arguments);
     }
 }
