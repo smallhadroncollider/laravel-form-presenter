@@ -130,10 +130,21 @@ class FieldSetPresenterTest extends TestCase
 
         $this->assertRegExp("/^[A-Z][a-z]+$/", $test->arguments[0]);
         $this->assertEquals("name", $test->arguments[1]);
+
+        // Test multi-select
+        $fieldset = new TestMultiSelectSetPresenter();
+        $test = new PublicisedTestCase();
+
+        $fieldset->populateTest($test);
+
+        $this->assertEquals("name[]", $test->arguments[1]);
+        $this->assertThat($test->arguments[0], $this->isType("array"));
     }
 
     public function testMultiField()
     {
+        TestMultiFieldSetPresenter::clearIndexes();
+
         foreach (range(0, 2) as $i) {
             $fieldset = new TestMultiFieldSetPresenter();
 
@@ -170,7 +181,7 @@ class PublicisedTestCase extends TestCase
 
     public function __call($name, $arguments)
     {
-        if ($name === "type") {
+        if ($name === "type" || $name === "select") {
             $this->arguments = $arguments;
         }
     }
@@ -186,6 +197,26 @@ class TestFieldSetPresenter extends FieldSetPresenter
                 "name" => "name",
                 "label" => "Name",
                 "rules" => ["required"],
+            ],
+        ];
+    }
+}
+
+class TestMultiSelectSetPresenter extends FieldSetPresenter
+{
+    protected function fields()
+    {
+        return [
+            [
+                "type" => "multi-select",
+                "name" => "name",
+                "label" => "Name",
+                "items" => [
+                    "1" => "one",
+                    "2" => "two",
+                    "3" => "three",
+                    "4" => "four",
+                ]
             ],
         ];
     }
