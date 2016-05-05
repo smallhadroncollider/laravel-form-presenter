@@ -40,6 +40,6 @@ class MultiSelect extends Select implements FieldInterface
             return !!$value;
         }));
 
-        return $test->select($values, "{$this->name}[]");
+        return $test->select($values, "{$this->name}");
     }
 }

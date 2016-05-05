@@ -137,7 +137,7 @@ class FieldSetPresenterTest extends TestCase
 
         $fieldset->populateTest($test);
 
-        $this->assertEquals("name[]", $test->arguments[1]);
+        $this->assertEquals("name", $test->arguments[1]);
         $this->assertThat($test->arguments[0], $this->isType("array"));
     }
 
