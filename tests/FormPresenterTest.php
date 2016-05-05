@@ -16,8 +16,6 @@ class FormPresenterTest extends TestCase
     {
         parent::setup();
 
-        FormBuilderProvider::clear();
-
         Session::start();
         $this->app["request"]->setSession(Session::driver());
 
