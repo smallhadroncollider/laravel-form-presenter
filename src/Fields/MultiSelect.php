@@ -36,9 +36,9 @@ class MultiSelect extends Select implements FieldInterface
 
     public function test(TestCase $test, Generator $faker)
     {
-        $values = $faker->randomElements(array_filter(array_keys($this->items)), function ($value) {
+        $values = $faker->randomElements(array_filter(array_keys($this->items), function ($value) {
             return !!$value;
-        });
+        }));
 
         return $test->select($values, "{$this->name}[]");
     }

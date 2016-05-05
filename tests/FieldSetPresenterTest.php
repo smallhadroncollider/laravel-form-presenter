@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Collection;
 use SmallHadronCollider\LaravelFormPresenter\FormPresenter;
 use SmallHadronCollider\LaravelFormPresenter\FieldPresenter;
 use SmallHadronCollider\LaravelFormPresenter\FieldSetPresenter;
@@ -129,18 +130,48 @@ class FieldSetPresenterTest extends TestCase
 
         $this->assertRegExp("/^[A-Z][a-z]+$/", $test->arguments[0]);
         $this->assertEquals("name", $test->arguments[1]);
+
+        // Test multi-select
+        $fieldset = new TestMultiSelectSetPresenter();
+        $test = new PublicisedTestCase();
+
+        $fieldset->populateTest($test);
+
+        $this->assertEquals("name[]", $test->arguments[1]);
+        $this->assertThat($test->arguments[0], $this->isType("array"));
     }
 
     public function testMultiField()
     {
-        $fieldset = new TestMultiFieldSetPresenter();
-        $this->assertEquals('<label for="people[0][email]">Email</label><input id="people[0][email]" placeholder="Email" required="true" name="people[0][email]" type="email"><label for="people[0][name]">Name</label><input id="people[0][name]" placeholder="Name" required="true" name="people[0][name]" type="text">', $fieldset->render());
+        TestMultiFieldSetPresenter::clearIndexes();
+
+        foreach (range(0, 2) as $i) {
+            $fieldset = new TestMultiFieldSetPresenter();
+
+            $this->assertEquals('<label for="people[' . $i . '][email]">Email</label><input id="people[' . $i . '][email]" placeholder="Email" required="true" name="people[' . $i . '][email]" type="email"><label for="people[' . $i . '][name]">Name</label><input id="people[' . $i . '][name]" placeholder="Name" required="true" name="people[' . $i . '][name]" type="text">', $fieldset->render());
+        }
+    }
+
+    public function testMultiFieldSetModel()
+    {
+        $this->markTestSkipped();
+
+        $model = (object) [
+            "people" => new Collection([
+                (object) ["email" => "one@test.com", "name" => "One"],
+                (object) ["email" => "two@test.com", "name" => "Two"],
+                (object) ["email" => "three@test.com", "name" => "Three"],
+            ]),
+        ];
+
+        TestMultiFieldSetPresenter::clearIndexes();
 
         $fieldset = new TestMultiFieldSetPresenter();
-        $this->assertEquals('<label for="people[1][email]">Email</label><input id="people[1][email]" placeholder="Email" required="true" name="people[1][email]" type="email"><label for="people[1][name]">Name</label><input id="people[1][name]" placeholder="Name" required="true" name="people[1][name]" type="text">', $fieldset->render());
+        $fieldset->setModel($model);
 
-        $fieldset = new TestMultiFieldSetPresenter();
-        $this->assertEquals('<label for="people[2][email]">Email</label><input id="people[2][email]" placeholder="Email" required="true" name="people[2][email]" type="email"><label for="people[2][name]">Name</label><input id="people[2][name]" placeholder="Name" required="true" name="people[2][name]" type="text">', $fieldset->render());
+        $this->assertCount(6, $fieldset->flatFields());
+
+        $this->assertEquals('<label for="people[0][email]">Email</label><input id="people[0][email]" placeholder="Email" required="true" name="people[0][email]" type="email" value="one@test.com"><label for="people[0][name]">Name</label><input id="people[0][name]" placeholder="Name" required="true" name="people[0][name]" type="text" value="One"><label for="people[1][email]">Email</label><input id="people[1][email]" placeholder="Email" required="true" name="people[1][email]" type="email" value="two@test.com"><label for="people[1][name]">Name</label><input id="people[1][name]" placeholder="Name" required="true" name="people[1][name]" type="text" value="Two"><label for="people[2][email]">Email</label><input id="people[2][email]" placeholder="Email" required="true" name="people[2][email]" type="email" value="three@test.com"><label for="people[2][name]">Name</label><input id="people[2][name]" placeholder="Name" required="true" name="people[2][name]" type="text" value="Three">', $fieldset->render());
     }
 }
 
@@ -150,7 +181,7 @@ class PublicisedTestCase extends TestCase
 
     public function __call($name, $arguments)
     {
-        if ($name === "type") {
+        if ($name === "type" || $name === "select") {
             $this->arguments = $arguments;
         }
     }
@@ -166,6 +197,26 @@ class TestFieldSetPresenter extends FieldSetPresenter
                 "name" => "name",
                 "label" => "Name",
                 "rules" => ["required"],
+            ],
+        ];
+    }
+}
+
+class TestMultiSelectSetPresenter extends FieldSetPresenter
+{
+    protected function fields()
+    {
+        return [
+            [
+                "type" => "multi-select",
+                "name" => "name",
+                "label" => "Name",
+                "items" => [
+                    "1" => "one",
+                    "2" => "two",
+                    "3" => "three",
+                    "4" => "four",
+                ]
             ],
         ];
     }
@@ -229,18 +280,21 @@ class TestMultiFieldSetPresenter extends FieldSetPresenter
     protected function fields()
     {
         return [
-            $this->multifield("people", [
+            [
+                "parent" => "people",
                 "type" => "email",
                 "name" => "email",
                 "label" => "Email",
                 "rules" => ["required"],
-            ]),
-            $this->multifield("people", [
+            ],
+
+            [
+                "parent" => "people",
                 "type" => "text",
                 "name" => "name",
                 "label" => "Name",
                 "rules" => ["required"],
-            ]),
+            ],
         ];
     }
 }
