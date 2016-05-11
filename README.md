@@ -59,6 +59,7 @@ class PersonFieldSet extends FieldSetPresenter
                 "name" => "notes",
                 "type" => "textarea",
                 "label" => "Notes",
+                "attrs" => ["class" => "js__rich-text"],
             ],
         ];
     }
@@ -227,7 +228,7 @@ class PersonFieldSet extends FieldSetPresenter
 }
 ```
 
-Reserved property names: `name`, `type`, `label`, `value`, `rules`, `items`
+Reserved property names: `name`, `type`, `label`, `value`, `rules`, `items`, `attrs`
 
 Using a custom field renderer as above:
 

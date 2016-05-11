@@ -14,7 +14,7 @@ class Hidden extends AbstractField implements FieldInterface
 
     public function display($attrs = [])
     {
-        return $this->formBuilder->hidden($this->name, $this->value(), $attrs);
+        return $this->formBuilder->hidden($this->name, $this->value(), $this->mergeAttrs($attrs));
     }
 
     public function test(TestCase $test, Generator $faker)

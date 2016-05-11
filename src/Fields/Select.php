@@ -22,10 +22,10 @@ class Select extends AbstractField implements FieldInterface
 
     public function display($attrs = [])
     {
-        $attrs = $this->setID($attrs);
-        $attrs = $this->setRequired($attrs);
+        $this->setID();
+        $this->setRequired();
 
-        return $this->formBuilder->select($this->name, $this->items, $this->value(), $attrs);
+        return $this->formBuilder->select($this->name, $this->items, $this->value(), $this->mergeAttrs($attrs));
     }
 
     protected function setup(array $attr)

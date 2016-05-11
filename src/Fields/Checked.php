@@ -17,7 +17,7 @@ class Checked extends AbstractField implements FieldInterface
     public function display($attrs = [])
     {
         $checked = $this->value() == $this->valueAttr;
-        return $this->formBuilder->{$this->type}($this->name, $this->valueAttr, $checked, $attrs);
+        return $this->formBuilder->{$this->type}($this->name, $this->valueAttr, $checked, $this->mergeAttrs($attrs));
     }
 
     protected function setup(array $attr)

@@ -27,11 +27,11 @@ class MultiSelect extends Select implements FieldInterface
 
     public function display($attrs = [])
     {
-        $attrs = $this->setID($attrs);
-        $attrs = $this->setRequired($attrs);
-        $attrs["multiple"] = "true";
+        $this->setID();
+        $this->setRequired();
+        $this->setAttr("multiple", "true");
 
-        return $this->formBuilder->select("{$this->name}[]", $this->items, $this->value(), $attrs);
+        return $this->formBuilder->select("{$this->name}[]", $this->items, $this->value(), $this->mergeAttrs($attrs));
     }
 
     public function test(TestCase $test, Generator $faker)
