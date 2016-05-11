@@ -15,14 +15,18 @@ abstract class AbstractField
     protected $label;
     protected $type;
     protected $value;
-    protected $attr;
+    protected $attrs;
+    protected $properties;
 
     protected $rules = [];
+
+    protected $appendableAttributes = ["class"];
+
 
     public function __construct(array $attr)
     {
         $this->formBuilder = new FormBuilderProvider();
-        $this->attr = $this->setup($attr);
+        $this->properties = $this->setup($attr);
     }
 
     public function setValue($value)
@@ -51,15 +55,15 @@ abstract class AbstractField
         return $this->display();
     }
 
-    protected function setup(array $attr)
+    protected function setup(array $properties)
     {
-        $this->checkAttr($attr);
+        $this->checkAttr($properties);
 
-        foreach (["name", "type", "label", "value", "rules"] as $property) {
-            $this->{$property} = array_get($attr, $property);
+        foreach (["name", "type", "label", "value", "rules", "attrs"] as $property) {
+            $this->{$property} = array_get($properties, $property);
         }
 
-        return $attr;
+        return $properties;
     }
 
     public function value()
@@ -71,42 +75,68 @@ abstract class AbstractField
     abstract public function label();
     abstract public function test(TestCase $test, Generator $faker);
 
-    protected function checkAttr(array $attr)
+    protected function checkAttr(array $property)
     {
-        foreach (["type", "name", "label"] as $property) {
-            if (!array_key_exists($property, $attr)) {
-                throw new Exception("{$property} property missing");
+        foreach (["type", "name", "label"] as $type) {
+            if (!array_key_exists($type, $property)) {
+                throw new Exception("{$type} property missing");
             }
         }
     }
 
-    protected function setRequired($attr = [])
+    protected function setRequired()
     {
         $rules = $this->rules ? : [];
 
         if (in_array("required", $rules)) {
-            $attr["required"] = "true";
+            $this->setAttr("required", "true");
         }
 
-        return $attr;
+        return $this->attrs;
     }
 
-    protected function setPlaceholder($attr = [])
+    protected function setPlaceholder()
     {
-        $attr["placeholder"] = $this->label;
-        return $attr;
+        $this->setAttr("placeholder", $this->label);
+        return $this->attrs;
     }
 
-    protected function setID($attr = [])
+    protected function setID()
     {
-        $attr["id"] = $this->name;
-        return $attr;
+        $this->setAttr("id", $this->name);
+        return $this->attrs;
+    }
+
+    protected function setAttr($name, $value)
+    {
+        if (in_array($name, $this->appendableAttributes)) {
+            return $this->appendAttr($name, $value);
+        }
+
+        $this->attrs[$name] = $value;
+        return $this->attrs;
+    }
+
+    protected function appendAttr($name, $value)
+    {
+        $current = array_get($this->attrs, $name);
+        $this->attrs[$name] = $current ? "{$current} {$value}" : $value;
+        return $this->attrs;
+    }
+
+    protected function mergeAttrs($attrs)
+    {
+        foreach ($attrs as $key => $value) {
+            $this->setAttr($key, $value);
+        }
+
+        return $this->attrs;
     }
 
     public function __call($name, $arguments)
     {
-        if (array_key_exists($name, $this->attr)) {
-            return $this->attr[$name];
+        if (array_key_exists($name, $this->properties)) {
+            return $this->properties[$name];
         }
 
         return null;
