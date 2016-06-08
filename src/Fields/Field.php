@@ -32,8 +32,6 @@ class Field extends AbstractField implements FieldInterface
                 return $test->type(mt_rand(1, 10), $this->name);
             case "email":
                 return $test->type($faker->email, $this->name);
-            case "password":
-                return $test->type($faker->password, $this->name);
             default:
                 return $test->type(ucwords($faker->word), $this->name);
         }
