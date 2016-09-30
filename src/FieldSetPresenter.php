@@ -32,6 +32,17 @@ abstract class FieldSetPresenter implements Fieldlike
         return $this;
     }
 
+    public function set($key, $value)
+    {
+        if (!$this->model) {
+            $this->model = (object) [];
+        }
+
+        $this->model->{$key} = $value;
+
+        return $this;
+    }
+
     public function render()
     {
         $content = array_reduce($this->getFields(), function ($html, Fieldlike $field) {
