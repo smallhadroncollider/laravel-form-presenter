@@ -5,6 +5,7 @@ namespace SmallHadronCollider\LaravelFormPresenter\Fields;
 use Exception;
 use BadMethodCallException;
 use SmallHadronCollider\LaravelFormPresenter\FormBuilderProvider;
+use Illuminate\Http\Request;
 
 use Illuminate\Foundation\Testing\TestCase;
 use Faker\Generator;
@@ -43,6 +44,11 @@ abstract class AbstractField
     public function type()
     {
         return $this->type;
+    }
+
+    public function request(Request $request)
+    {
+        return $request->get($this->name);
     }
 
     public function rules()

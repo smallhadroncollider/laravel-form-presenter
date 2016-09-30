@@ -3,6 +3,7 @@
 namespace SmallHadronCollider\LaravelFormPresenter;
 
 use Faker\Factory;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Testing\TestCase;
 
 abstract class FieldSetPresenter implements Fieldlike
@@ -105,6 +106,13 @@ abstract class FieldSetPresenter implements Fieldlike
         return array_values(array_filter($fieldNames, function ($fieldName) {
             return !in_array($fieldName, $this->exclude);
         }));
+    }
+
+    public function request(Request $request, array $data = [])
+    {
+        return array_reduce($this->flatFields(), function ($data, $field) use ($request) {
+            return $field->request($request, $data);
+        }, $data);
     }
 
     protected function getFields()
