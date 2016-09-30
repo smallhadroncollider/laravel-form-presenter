@@ -2,6 +2,7 @@
 
 namespace SmallHadronCollider\LaravelFormPresenter;
 
+use Illuminate\Http\Request;
 use ReflectionClass;
 use Closure;
 use Exception;
@@ -103,6 +104,12 @@ class FieldPresenter implements Fieldlike
         }
 
         return $rules;
+    }
+
+    public function request(Request $request, array $data = [])
+    {
+        $data[$this->field->name()] = $this->field->request($request);
+        return $data;
     }
 
     public function fieldNames(array $fieldNames = [])
