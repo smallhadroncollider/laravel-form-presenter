@@ -108,8 +108,7 @@ class FieldPresenter implements Fieldlike
 
     public function request(Request $request, array $data = [])
     {
-        $data[$this->field->name()] = $this->field->request($request);
-        return $data;
+        return $this->field->request($request, $data);
     }
 
     public function fieldNames(array $fieldNames = [])

@@ -46,9 +46,10 @@ abstract class AbstractField
         return $this->type;
     }
 
-    public function request(Request $request)
+    public function request(Request $request, $data = [])
     {
-        return $request->get($this->name);
+        $data[$this->name] = $request->get($this->name);
+        return $data;
     }
 
     public function rules()
