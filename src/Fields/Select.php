@@ -25,6 +25,16 @@ class Select extends AbstractField implements FieldInterface
         $this->setID();
         $this->setRequired();
 
+        if (array_key_exists("readonly", $this->attrs)) {
+            $value = null;
+
+            if (array_key_exists($this->value(), $this->items)) {
+                $value = $this->items[$this->value()];
+            }
+
+            return $this->formBuilder->text("{$this->name}_visible", $value, $this->mergeAttrs($attrs)) . $this->formBuilder->hidden($this->name, $this->value(), $this->mergeAttrs($attrs));
+        }
+
         return $this->formBuilder->select($this->name, $this->items, $this->value(), $this->mergeAttrs($attrs));
     }
 
