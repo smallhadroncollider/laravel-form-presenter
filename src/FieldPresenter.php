@@ -24,6 +24,7 @@ class FieldPresenter implements Fieldlike
         "checkbox" => Fields\Checked::class,
         "radio" => Fields\Checked::class,
         "email" => Fields\Field::class,
+        "url" => Fields\Field::class,
         "number" => Fields\Field::class,
         "password" => Fields\Password::class,
         "date" => Fields\Field::class,
