@@ -29,7 +29,7 @@ class FieldPresenter implements Fieldlike
         "date" => Fields\Field::class,
         "datetime" => Fields\Field::class,
         "hidden" => Fields\Hidden::class,
-        "file" => Fields\Field::class,
+        "file" => Fields\File::class,
         "textarea" => Fields\TextArea::class,
         "select" => Fields\Select::class,
         "multi-select" => Fields\MultiSelect::class,
@@ -58,10 +58,6 @@ class FieldPresenter implements Fieldlike
     public function __construct(array $attr, $parent = null, $id = 0)
     {
         $this->name = array_get($attr, "name");
-
-        if ($attr["type"] == "fish") {
-            dd($attr);
-        }
 
         if ($parent) {
             $attr["name"] = "{$parent}[{$id}][{$attr["name"]}]";
